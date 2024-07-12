@@ -1,10 +1,16 @@
 import React from "react";
+import Header from './components/Header';
+import { Route, Routes } from 'react-router-dom';
+import CreateEventForm from './components/CreateEventForm';
 
 const App = () => {
   return (
-    <div>
-      <h1>App.tsx</h1>
-    </div>
+    <>
+     <Header />
+     <Routes>
+        <Route path="/create-event" element={<CreateEventForm />} />
+     </Routes>
+    </>
   );
 };
 
