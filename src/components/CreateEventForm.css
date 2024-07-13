@@ -1,0 +1,39 @@
+@media (min-width: 600px) and (max-width: 1000px) {
+    input[type="text"],
+    textarea,
+    input[type="time"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: block;
+        border: 1px solid black;
+        border-radius: 4px;
+        font-size: 80px;
+        resize: none;
+    }
+
+    #create-event-form-title {
+        text-align: center;
+        font-family: sans-serif;
+        font-size: 100px;
+    }
+
+    label {
+        font-size: 100px;
+    }
+
+    footer {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 20px;
+    }
+
+    button {
+        font-size: 5rem;
+        border-radius: 10px;
+    }
+}
+
+.create-event-form {
+    align-items: center;
+}
