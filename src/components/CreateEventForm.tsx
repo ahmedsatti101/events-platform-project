@@ -6,10 +6,20 @@ import "react-datepicker/dist/react-datepicker.css";
 export default function CreateEventForm() {
   const [date, setDate] = useState(new Date());
 
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+
+    console.log("form submitted");
+  };
+
   return (
     <>
       <h2 id="create-event-form-title">Create event</h2>
-      <form className="create-event-form" autoComplete="off">
+      <form
+        className="create-event-form"
+        autoComplete="off"
+        onSubmit={handleSubmit}
+      >
         <label htmlFor="title" data-testid="title-test">
           Title:*{" "}
         </label>
@@ -37,7 +47,7 @@ export default function CreateEventForm() {
 
         <label>Place:*</label>
         <br />
-        <textarea></textarea>
+        <textarea required></textarea>
         <br />
 
         <label htmlFor="phone-number">Mobile: </label>
