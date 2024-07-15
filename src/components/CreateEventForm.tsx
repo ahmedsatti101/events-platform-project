@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import "./CreateEventForm.css";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
@@ -15,18 +13,38 @@ const schema = yup
     date: yup
       .date()
       .transform(function (value, originalValue) {
-       const parsedDate = isDate(originalValue) ? originalValue : parse(originalValue, "dd-MM-yyyy", new Date());
-       return parsedDate;
+        const parsedDate = isDate(originalValue)
+          ? originalValue
+          : parse(originalValue, "dd-MM-yyyy", new Date().toString());
+        return parsedDate;
       })
       .typeError("please enter a valid date")
       .required()
-      .min("11-12-2003", "Date is too early"),
-    startTime: yup.string().required("start time cannot be empty"),
+      .min(
+        moment().add(1, "days").startOf("day").toDate(),
+        "Date must be in the future",
+      ),
+    startTime: yup
+      .string()
+      .length(5)
+      .matches(/(\d){2}:(\d){2}/, "Time must be in this format 00:00")
+      .required("start time cannot be empty"),
     endTime: yup
       .string()
-      .required("end time cannot be empty"),
+      .length(5)
+      .matches(/(\d){2}:(\d){2}/, "Time must be in this format 00:00")
+      .required("end time cannot be empty")
+      .test("is-greater", "end time should be greater", function (value) {
+        const { startTime } = this.parent;
+        return moment(value, "HH:mm").isAfter(moment(startTime, "HH:mm"));
+      }),
     place: yup.string().required(),
-    mobile: yup.string(),
+    phoneNumber: yup
+      .string()
+      .matches(
+        /^(?:0|\+44)\s?\d{10}$/,
+        "Enter valid phone number e.g. +447896345621 / 07896345621"
+      ),
     email: yup
       .string()
       .matches(
@@ -36,10 +54,25 @@ const schema = yup
   })
   .required();
 
+try {
+  schema.validateSync({
+    title: "Sample Title",
+    description: "Sample Description",
+    date: "12-12-2024",
+    startTime: "10:00",
+    endTime: "11:00",
+    place: "Sample Place",
+    phoneNumber: "+447625103347",
+    email: "sample@example.com",
+  });
+} catch (err) {
+  console.log(err);
+}
+
 type FormData = yup.InferType<typeof schema>;
 
 export default function CreateEventForm() {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date().toString());
   const {
     register,
     handleSubmit,
@@ -52,6 +85,7 @@ export default function CreateEventForm() {
   return (
     <>
       <h2 id="create-event-form-title">Create event</h2>
+      <p>Field marked with an asterisk (*) are required</p>
       <form
         className="create-event-form"
         autoComplete="off"
@@ -73,23 +107,19 @@ export default function CreateEventForm() {
 
         <label>Date:* </label>
         <br />
-        <input type="text" {...register("date")} placeholder="dd-mm-yyyy"/>
-        <p>{errors.date?.message}</p>
-        {/*<DatePicker
-          selected={date}
-          onChange={(date) => date && setDate(date)}
-        />*/}
+        <input type="text" {...register("date")} placeholder="dd-mm-yyyy" />
+        <p>{errors.date?.message}</p> 
         <br />
 
-        <label htmlFor="start-time">Start time:*</label>
+        <label htmlFor="start-time">Start time:* (24 hour format)</label>
         <br />
-        <input type="text"  {...register("startTime")} />
+        <input type="text" {...register("startTime")} placeholder="00:00" />
         <p>{errors.startTime?.message}</p>
         <br />
 
-        <label htmlFor="end-time">End time:*</label>
+        <label htmlFor="end-time">End time:* (24 hour format)</label>
         <br />
-        <input type="text"  {...register("endTime")} />
+        <input type="text" {...register("endTime")} placeholder="00:00" />
         <p>{errors.endTime?.message}</p>
         <br />
 
@@ -99,10 +129,10 @@ export default function CreateEventForm() {
         <p>{errors.place?.message}</p>
         <br />
 
-        <label htmlFor="phone-number">Mobile: </label>
+        <label htmlFor="phone-number">Phone number: </label>
         <br />
-        <input type="text" {...register("mobile")} />
-        <p>{errors.mobile?.message}</p>
+        <input type="text" {...register("phoneNumber")} />
+        <p>{errors.phoneNumber?.message}</p>
         <br />
 
         <label htmlFor="email">Email: </label>
