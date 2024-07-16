@@ -1,8 +1,3 @@
-"use client";
-import React from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App";
-import { BrowserRouter } from "react-router-dom";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 
@@ -32,7 +27,7 @@ const colRef = collection(db, "events");
 
 getDocs(colRef)
     .then((snapshot) => {
-       let events: any[] = [];
+       let events = [];
        snapshot.docs.forEach((doc) => {
         events.push({...doc.data(), id: doc.id})
        })
@@ -41,12 +36,3 @@ getDocs(colRef)
     .catch(err => {
         console.log(err);
     })
-
-const container = document.getElementById("root");
-const root = createRoot(container!);
-
-root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
-);
