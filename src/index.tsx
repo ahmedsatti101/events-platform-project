@@ -38,9 +38,6 @@ getDocs(colRef)
        })
        console.log(events);
     })
-    .catch(err => {
-        console.log(err);
-    })
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
