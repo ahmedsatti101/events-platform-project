@@ -132,6 +132,7 @@ export default function CreateEventForm() {
           {...register("title")}
           id="title"
           onChange={(e) => setTitle(e.target.value)}
+          data-testid="input-title"
         />
         <p>{errors.title?.message}</p>
         <br />
@@ -143,6 +144,7 @@ export default function CreateEventForm() {
           {...register("description")}
           id="description"
           onChange={(e) => setDescription(e.target.value)}
+          data-testid="input-description"
         />
         <p>{errors.description?.message}</p>
         <br />
