@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 
 const apiKey = process.env.REACT_APP_API_KEY;
 const authDomain = process.env.REACT_APP_AUTH_DOMAIN;
@@ -19,20 +19,5 @@ const config = {
   measurementId: measurementId,
 };
 
-initializeApp(config);
-
-const db = getFirestore();
-
-const colRef = collection(db, "events");
-
-getDocs(colRef)
-    .then((snapshot) => {
-       let events = [];
-       snapshot.docs.forEach((doc) => {
-        events.push({...doc.data(), id: doc.id})
-       })
-       console.log(events);
-    })
-    .catch(err => {
-        console.log(err);
-    })
+const app = initializeApp(config);
+export const db = getFirestore(app);
