@@ -2,4 +2,4 @@ node_modules
 .env
 .idea
 .vscode
-/public/bundle.js
+public/bundle.js

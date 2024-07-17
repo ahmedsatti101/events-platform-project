@@ -10,8 +10,8 @@ import { collection, addDoc } from "firebase/firestore";
 
 const schema = yup
   .object({
-    title: yup.string().required(),
-    description: yup.string().required(),
+    title: yup.string().required().min(10, "Title must include at least 10 characters").max(50, "Reached maximum character length"),
+    description: yup.string().required().min(20, "Description must include at least 20 characters").max(200, "Reached maximum character length"),
     date: yup
       .date()
       .transform(function (value, originalValue) {
@@ -40,7 +40,7 @@ const schema = yup
         const { startTime } = this.parent;
         return moment(value, "HH:mm").isAfter(moment(startTime, "HH:mm"));
       }),
-    place: yup.string().required(),
+    location: yup.string().required().min(20, "Location must include at least 20 characters").max(200, "Reached maximum character length"),
     phoneNumber: yup
       .string()
       .matches(
@@ -63,7 +63,7 @@ try {
     date: "12-12-2024",
     startTime: "10:00",
     endTime: "11:00",
-    place: "Sample Place",
+    location: "Sample location",
     phoneNumber: "+447625103347",
     email: "sample@example.com",
   });
@@ -183,10 +183,10 @@ export default function CreateEventForm() {
         <p>{errors.endTime?.message}</p>
         <br />
 
-        <label>Place:*</label>
+        <label>Location:*</label>
         <br />
-        <textarea {...register("place")} id="location" onChange={(e) => setLocation(e.target.value)}></textarea>
-        <p>{errors.place?.message}</p>
+        <textarea {...register("location")} id="location" onChange={(e) => setLocation(e.target.value)}></textarea>
+        <p>{errors.location?.message}</p>
         <br />
 
         <label htmlFor="phone-number">Phone number: </label>
