@@ -1,7 +1,9 @@
 import React from "react";
 import Header from "./components/Header";
 import { Route, Routes } from "react-router-dom";
-import CreateEventForm from "./components/CreateEventForm";
+import CreateEventForm from "./components/CreateEventFrom/CreateEventForm";
+import SignUp from "./components/SignUp";
+import SignIn from "./components/SignIn";
 
 const App = () => {
   return (
@@ -9,6 +11,8 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/create-event" element={<CreateEventForm />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/sign-in" element={<SignIn />} />
       </Routes>
     </>
   );
