@@ -5,13 +5,21 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { parse, isDate } from "date-fns";
 import moment from "moment";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { collection, addDoc } from "firebase/firestore";
 
 const schema = yup
   .object({
-    title: yup.string().required().min(10, "Title must include at least 10 characters").max(50, "Reached maximum character length"),
-    description: yup.string().required().min(20, "Description must include at least 20 characters").max(200, "Reached maximum character length"),
+    title: yup
+      .string()
+      .required()
+      .min(10, "Title must include at least 10 characters")
+      .max(50, "Reached maximum character length"),
+    description: yup
+      .string()
+      .required()
+      .min(20, "Description must include at least 20 characters")
+      .max(200, "Reached maximum character length"),
     date: yup
       .date()
       .transform(function (value, originalValue) {
@@ -40,7 +48,11 @@ const schema = yup
         const { startTime } = this.parent;
         return moment(value, "HH:mm").isAfter(moment(startTime, "HH:mm"));
       }),
-    location: yup.string().required().min(20, "Location must include at least 20 characters").max(200, "Reached maximum character length"),
+    location: yup
+      .string()
+      .required()
+      .min(20, "Location must include at least 20 characters")
+      .max(200, "Reached maximum character length"),
     phoneNumber: yup
       .string()
       .matches(
@@ -63,12 +75,12 @@ try {
     date: "12-12-2024",
     startTime: "10:00",
     endTime: "11:00",
-    location: "Sample location",
+    location: "This is a sample location the staff will enter or rather the length of it",
     phoneNumber: "+447625103347",
     email: "sample@example.com",
   });
 } catch (err) {
-  alert(err);
+  console.log(err);
 }
 
 type FormData = yup.InferType<typeof schema>;
@@ -101,7 +113,7 @@ export default function CreateEventForm() {
         startTime,
         endTime,
         phoneNumber,
-        email
+        email,
       })
         .then(() => {
           alert("data submitted!");
@@ -191,19 +203,36 @@ export default function CreateEventForm() {
 
         <label>Location:*</label>
         <br />
-        <textarea {...register("location")} id="location" onChange={(e) => setLocation(e.target.value)} data-testid="input-location"></textarea>
+        <textarea
+          {...register("location")}
+          id="location"
+          onChange={(e) => setLocation(e.target.value)}
+          data-testid="input-location"
+        ></textarea>
         <p>{errors.location?.message}</p>
         <br />
 
         <label htmlFor="phone-number">Phone number: </label>
         <br />
-        <input type="text" {...register("phoneNumber")} id="phone-number" onChange={(e) => setPhoneNumber(e.target.value)} data-testid="input-phone-number"/>
+        <input
+          type="text"
+          {...register("phoneNumber")}
+          id="phone-number"
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          data-testid="input-phone-number"
+        />
         <p>{errors.phoneNumber?.message}</p>
         <br />
 
         <label htmlFor="email">Email: </label>
         <br />
-        <input type="text" {...register("email")} id="email" onChange={(e) => setEmail(e.target.value)} data-testid="input-email"/>
+        <input
+          type="text"
+          {...register("email")}
+          id="email"
+          onChange={(e) => setEmail(e.target.value)}
+          data-testid="input-email"
+        />
         <p>{errors.email?.message}</p>
         <br />
 
