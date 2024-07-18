@@ -122,6 +122,7 @@ export default function CreateEventForm() {
         className="create-event-form"
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
+        data-testid="event-form"
       >
         <label htmlFor="title" data-testid="title-test">
           Title:*{" "}
@@ -157,6 +158,7 @@ export default function CreateEventForm() {
           placeholder="dd-mm-yyyy"
           id="date"
           onChange={(e) => setDate(e.target.value)}
+          data-testid="input-date"
         />
         <p>{errors.date?.message}</p>
         <br />
@@ -169,6 +171,7 @@ export default function CreateEventForm() {
           placeholder="00:00"
           id="start-time"
           onChange={(e) => setStartTime(e.target.value)}
+          data-testid="input-start-time"
         />
         <p>{errors.startTime?.message}</p>
         <br />
@@ -181,25 +184,26 @@ export default function CreateEventForm() {
           placeholder="00:00"
           id="end-time"
           onChange={(e) => setEndTime(e.target.value)}
+          data-testid="input-end-time"
         />
         <p>{errors.endTime?.message}</p>
         <br />
 
         <label>Location:*</label>
         <br />
-        <textarea {...register("location")} id="location" onChange={(e) => setLocation(e.target.value)}></textarea>
+        <textarea {...register("location")} id="location" onChange={(e) => setLocation(e.target.value)} data-testid="input-location"></textarea>
         <p>{errors.location?.message}</p>
         <br />
 
         <label htmlFor="phone-number">Phone number: </label>
         <br />
-        <input type="text" {...register("phoneNumber")} id="phone-number" onChange={(e) => setPhoneNumber(e.target.value)}/>
+        <input type="text" {...register("phoneNumber")} id="phone-number" onChange={(e) => setPhoneNumber(e.target.value)} data-testid="input-phone-number"/>
         <p>{errors.phoneNumber?.message}</p>
         <br />
 
         <label htmlFor="email">Email: </label>
         <br />
-        <input type="text" {...register("email")} id="email" onChange={(e) => setEmail(e.target.value)}/>
+        <input type="text" {...register("email")} id="email" onChange={(e) => setEmail(e.target.value)} data-testid="input-email"/>
         <p>{errors.email?.message}</p>
         <br />
 
