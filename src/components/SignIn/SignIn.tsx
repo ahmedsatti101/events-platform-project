@@ -14,9 +14,7 @@ const schema = yup
         "Invalid email address"
       )
       .required("Email required"),
-    password: yup
-      .string()
-      .required("Password required"),
+    password: yup.string().required("Password required"),
   })
   .required();
 
@@ -45,23 +43,49 @@ export default function SignIn() {
 
   const onSubmit = () => {
     signInWithEmailAndPassword(auth, email, password)
-        .then((creds) => {
-            alert("Logged in as: " + creds.user.email)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-  }
+      .then((creds) => {
+        alert("Logged in as: " + creds.user.email);
+      })
+      .catch((err) => {
+        if (err.code === "auth/invalid-credential") {
+          alert("Incorrect email or password");
+        } else {
+          console.log(err);
+        }
+      });
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      autoComplete="off"
+      data-testid="sign-in-form"
+    >
       <h2>Sign in</h2>
-      <label htmlFor="email">Email:</label>
-      <input type="text" title="email" {...register("email")} onChange={(e) => setEmail(e.target.value)}/>
+      <label htmlFor="email" data-testid="email-test">
+        Email:
+      </label>
+      <input
+        type="text"
+        title="email"
+        {...register("email")}
+        onChange={(e) => setEmail(e.target.value)}
+        data-testid="input-email"
+      />
+      <p>{errors.email?.message}</p>
       <br />
 
-      <label htmlFor="password">Password:</label>
-      <input type="password" title="password" {...register("password")} onChange={(e) => setPassword(e.target.value)}/>
+      <label htmlFor="password" data-testid="password-test">
+        Password:
+      </label>
+      <input
+        type="password"
+        title="password"
+        {...register("password")}
+        onChange={(e) => setPassword(e.target.value)}
+        data-testid="input-password"
+      />
+      <p>{errors.password?.message}</p>
       <br />
 
       <button type="submit">Sign in</button>

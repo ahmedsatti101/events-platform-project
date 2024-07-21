@@ -59,32 +59,45 @@ export default function SignUp() {
   };
 
   return (
-    <section>
-    <form onSubmit={handleSubmit(onSubmit)} autoComplete="off" data-testid="sign-up-form">
-      <h2>Create account</h2>
-      <label htmlFor="email" data-testid="email-test">Email:</label>
-      <input
-        type="email"
-        title="email"
-        {...register("email")}
-        onChange={(e) => setEmail(e.target.value)}data-testid="input-email"
-      />
-      <p>{errors.email?.message}</p>
-      <br />
+    <>
+      <h2 id="title">Create an account</h2>
+      <section>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+          data-testid="sign-up-form"
+        >
+          <label htmlFor="email" data-testid="email-test">
+            Email:
+          </label>
+          <br />
+          <input
+            type="email"
+            title="email"
+            {...register("email")}
+            onChange={(e) => setEmail(e.target.value)}
+            data-testid="input-email"
+          />
+          <p id="error-text">{errors.email?.message}</p>
+          <br />
 
-      <label htmlFor="password" data-testid="password-test">Password:</label>
-      <input
-        type="password"
-        title="password"
-        {...register("password")}
-        onChange={(e) => setPassword(e.target.value)}
-        data-testid="input-password"
-      />
-      <p>{errors.password?.message}</p>
-      <br />
+          <label htmlFor="password" data-testid="password-test">
+            Password:
+          </label>
+          <br />
+          <input
+            type="password"
+            title="password"
+            {...register("password")}
+            onChange={(e) => setPassword(e.target.value)}
+            data-testid="input-password"
+          />
+          <p id="error-text">{errors.password?.message}</p>
+          <br />
 
-      <button type="submit">Sign up</button>
-    </form>
-    </section>
+          <button type="submit">Sign up</button>
+        </form>
+      </section>
+    </>
   );
 }
