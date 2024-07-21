@@ -46,7 +46,7 @@ export default function SignIn() {
   const onSubmit = () => {
     signInWithEmailAndPassword(auth, email, password)
         .then((creds) => {
-            console.log("user logged in: ", creds.user)
+            alert("Logged in as: " + creds.user.email)
         })
         .catch((err) => {
             console.log(err)

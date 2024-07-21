@@ -4,6 +4,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import "./SignUp.css";
 
 const schema = yup
   .object({
@@ -47,7 +48,7 @@ export default function SignUp() {
     try {
       createUserWithEmailAndPassword(auth, email, password)
         .then((creds) => {
-          console.log(creds.user);
+          alert("Signed up as: " + creds.user.email);
         })
         .catch((err) => {
           console.log(err);
@@ -58,27 +59,32 @@ export default function SignUp() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+    <section>
+    <form onSubmit={handleSubmit(onSubmit)} autoComplete="off" data-testid="sign-up-form">
       <h2>Create account</h2>
-      <label htmlFor="email">Email:</label>
+      <label htmlFor="email" data-testid="email-test">Email:</label>
       <input
-        type="text"
+        type="email"
         title="email"
         {...register("email")}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)}data-testid="input-email"
       />
+      <p>{errors.email?.message}</p>
       <br />
 
-      <label htmlFor="password">Password:</label>
+      <label htmlFor="password" data-testid="password-test">Password:</label>
       <input
         type="password"
         title="password"
         {...register("password")}
         onChange={(e) => setPassword(e.target.value)}
+        data-testid="input-password"
       />
+      <p>{errors.password?.message}</p>
       <br />
 
       <button type="submit">Sign up</button>
     </form>
+    </section>
   );
 }
