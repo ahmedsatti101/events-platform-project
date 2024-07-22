@@ -71,7 +71,7 @@ const schema = yup
 try {
   schema.validateSync({
     title: "Sample Title",
-    description: "Sample Description",
+    description: "Sample Description for an event to be created",
     date: "12-12-2024",
     startTime: "10:00",
     endTime: "11:00",
