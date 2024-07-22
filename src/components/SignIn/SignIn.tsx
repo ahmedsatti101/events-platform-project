@@ -4,6 +4,7 @@ import { auth } from "../../firebase";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import "./SignIn.css";
 
 const schema = yup
   .object({
@@ -56,39 +57,44 @@ export default function SignIn() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      autoComplete="off"
-      data-testid="sign-in-form"
-    >
-      <h2>Sign in</h2>
-      <label htmlFor="email" data-testid="email-test">
-        Email:
-      </label>
-      <input
-        type="text"
-        title="email"
-        {...register("email")}
-        onChange={(e) => setEmail(e.target.value)}
-        data-testid="input-email"
-      />
-      <p>{errors.email?.message}</p>
-      <br />
+    <>
+      <h2 id="title">Sign in</h2>
+      <section>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+          data-testid="sign-in-form"
+        >
+          <label htmlFor="email" data-testid="email-test">
+            Email:
+          </label>
+          <br />
+          <input
+            type="email"
+            title="email"
+            {...register("email")}
+            onChange={(e) => setEmail(e.target.value)}
+            data-testid="input-email"
+          />
+          <p id="error-text">{errors.email?.message}</p>
+          <br />
 
-      <label htmlFor="password" data-testid="password-test">
-        Password:
-      </label>
-      <input
-        type="password"
-        title="password"
-        {...register("password")}
-        onChange={(e) => setPassword(e.target.value)}
-        data-testid="input-password"
-      />
-      <p>{errors.password?.message}</p>
-      <br />
+          <label htmlFor="password" data-testid="password-test">
+            Password:
+          </label>
+          <input
+            type="password"
+            title="password"
+            {...register("password")}
+            onChange={(e) => setPassword(e.target.value)}
+            data-testid="input-password"
+          />
+          <p id="error-text">{errors.password?.message}</p>
+          <br />
 
-      <button type="submit">Sign in</button>
-    </form>
+          <button type="submit">Sign in</button>
+        </form>
+      </section>
+    </>
   );
 }

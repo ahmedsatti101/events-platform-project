@@ -66,7 +66,7 @@ describe("SignIn component", () => {
 
       const element = screen.queryByText("Invalid email address");
 
-      expect(element).toBeInTheDocument();
+      expect(element).toBeNull();
     });
   }); 
 });
