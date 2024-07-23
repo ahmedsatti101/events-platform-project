@@ -3,6 +3,8 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { useParams } from "react-router-dom";
 import "./SingleEvent.css";
+import EventSignUp from "../EventSignUp";
+import SignOut from "../SIgnOut";
 
 export default function SingleEvent() {
   const { event_id } = useParams();
@@ -64,7 +66,7 @@ export default function SingleEvent() {
             <h3>Where</h3>
             <p>{e.location}</p>
 
-            <button id="sign-up-button">Sign up</button>
+            <button id="sign-up-button" onClick={EventSignUp}>Sign up</button>
 
             <div className="tooltip">
               <button
@@ -78,6 +80,8 @@ export default function SingleEvent() {
                 Copy link
               </button>
             </div>
+
+            <SignOut />
 
             <p>
               For queries or issues you can send a message to {e.email} or phone{" "}
