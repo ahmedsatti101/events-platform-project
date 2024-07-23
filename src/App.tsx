@@ -5,7 +5,7 @@ import CreateEventForm from "./components/CreateEventFrom/CreateEventForm";
 import SignUp from "./components/SignUp/SignUp";
 import SignIn from "./components/SignIn/SignIn";
 import ViewAllEvents from "./components/Events/Events";
-import SingleEvent from "./components/SingleEvent";
+import SingleEvent from "./components/SingleEvent/SingleEvent";
 
 const App = () => {
   return (

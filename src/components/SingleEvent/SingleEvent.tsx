@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { getDoc, doc } from "firebase/firestore";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { useParams } from "react-router-dom";
-import { Button } from "@mui/material";
+import "./SingleEvent.css";
 
 export default function SingleEvent() {
   const { event_id } = useParams();
@@ -29,9 +29,22 @@ export default function SingleEvent() {
   }, [event_id]);
 
   const copyUrl = () => {
+    const copy = document.getElementById("mytooltip");
     const url = window.location.href;
+
     navigator.clipboard.writeText(url);
-    alert("Link copied")
+
+    if (copy) {
+      copy.innerHTML = "Copied!";
+    }
+  };
+
+  function outFunc() {
+    const tooltip = document.getElementById("mytooltip");
+
+    if (tooltip) {
+      tooltip.innerHTML = "Copy to clipboard";
+    }
   }
 
   return (
@@ -51,15 +64,24 @@ export default function SingleEvent() {
             <h3>Where</h3>
             <p>{e.location}</p>
 
-            <Button variant="contained" id="sign-up-button">
-              Sign up
-            </Button>
+            <button id="sign-up-button">Sign up</button>
 
-            <button onClick={copyUrl}>Copy link</button>
+            <div className="tooltip">
+              <button
+                onClick={copyUrl}
+                onMouseOut={outFunc}
+                id="copy-link-button"
+              >
+                <span className="tooltiptext" id="mytooltip">
+                  Copy to clipboard
+                </span>
+                Copy link
+              </button>
+            </div>
 
             <p>
-              For queries or issues you can send a message to {e.email} or
-              phone {e.phoneNumber}
+              For queries or issues you can send a message to {e.email} or phone{" "}
+              {e.phoneNumber}
             </p>
           </>
         );
