@@ -102,7 +102,7 @@ export default function ViewAllEvents() {
                 <ExpandMoreIcon />
               </div>
               <p>Learn more</p>
-              <Button variant="contained" id="sign-up-button">
+              <Button variant="contained" id="sign-up-button" href={`events/${event.id}`}>
                 Sign up
               </Button>
             </CardActions>

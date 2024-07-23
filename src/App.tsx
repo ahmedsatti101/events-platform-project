@@ -5,6 +5,7 @@ import CreateEventForm from "./components/CreateEventFrom/CreateEventForm";
 import SignUp from "./components/SignUp/SignUp";
 import SignIn from "./components/SignIn/SignIn";
 import ViewAllEvents from "./components/Events/Events";
+import SingleEvent from "./components/SingleEvent/SingleEvent";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="/create-event" element={<CreateEventForm />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/events/:event_id" element={<SingleEvent />} />
       </Routes>
     </>
   );
