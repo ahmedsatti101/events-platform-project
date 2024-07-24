@@ -66,7 +66,7 @@ export default function SingleEvent() {
             <h3>Where</h3>
             <p>{e.location}</p>
 
-            <button id="sign-up-button" onClick={EventSignUp}>Sign up</button>
+            <button id="sign-up-button" onClick={() => {event_id ? EventSignUp(event_id): console.log("no event id")}}>Sign up</button>
 
             <div className="tooltip">
               <button

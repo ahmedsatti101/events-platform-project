@@ -97,6 +97,7 @@ export default function SignUp() {
 
           <button type="submit">Sign up</button>
         </form>
+        <p>Already have an account? <a href="/sign-in"> Sign in</a></p>
       </section>
     </>
   );
