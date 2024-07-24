@@ -4,7 +4,7 @@ import { auth } from "../firebase";
 export default function SignOut() {
   const signOut = async () => {
     await auth.signOut().then(() => {
-      console.log("logged out");
+      alert("Logged out");
     });
   };
 

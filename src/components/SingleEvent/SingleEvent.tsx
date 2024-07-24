@@ -4,7 +4,7 @@ import { db } from "../../firebase";
 import { useParams } from "react-router-dom";
 import "./SingleEvent.css";
 import EventSignUp from "../EventSignUp";
-import SignOut from "../SIgnOut";
+import SignOut from "../SignOut";
 
 export default function SingleEvent() {
   const { event_id } = useParams();
