@@ -1,30 +1,26 @@
 import React from "react";
-import { addEvent } from "./addToCalendar";
+import { google, CalendarEvent } from "calendar-link";
 
 type Props = {
     description: string,
     location: string,
-    creator: {email: string},
     title: string,
     start: {date: string},
     end: {date: string}
 }
 
-export default function AddToCalendar({description, location, creator, title, start, end}: Props) {
-  const calendarID = process.env.REACT_APP_CALENDAR_ID;
-
-  const event = {
+export default function AddToCalendar({description, location, title, start, end}: Props) {
+  const event: CalendarEvent = {
+    title,
     description,
+    start: "2019-12-29 18:00:00 +0100",
     location,
-    creator: {email: creator.email},
-    start: {date: "2024-07-25"},
-    end: {date: "2024-07-25"},
-    summary: title
-  }
+    busy: true
+  };
 
   return (
     <>
-      <button onClick={() => {addEvent(calendarID, event)}}>Add to calendar</button>
+      <a href={google(event)} target="_blank"><button>Add to calendar</button></a>
     </>
   );
 }

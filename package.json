@@ -19,6 +19,7 @@
     "@mui/material": "^5.16.4",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "calendar-link": "^2.6.0",
     "date-fns": "^3.6.0",
     "dotenv-webpack": "^8.1.0",
     "firebase": "^10.12.3",
