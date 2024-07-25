@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,13 +12,22 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import PedalBikeIcon from '@mui/icons-material/PedalBike';
+import PedalBikeIcon from "@mui/icons-material/PedalBike";
 import { auth } from "../firebase";
 
-const pages = ["Create event", "Sign up", "Sign in"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const pages = ["Events", "Create event", "Sign up", "Sign in"];
 
 export default function ResponsiveAppBar() {
+  const [isSignedIn, setIsSignedIn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setIsSignedIn(!!user);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -50,7 +59,6 @@ export default function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -125,7 +133,15 @@ export default function ResponsiveAppBar() {
                 key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
-                href={page === "Create event" ? "/create-event" : page === "Sign up" ? "/sign-up" : "/sign-in"}
+                href={
+                  page === "Create event"
+                    ? "/create-event"
+                    : page === "Sign up"
+                    ? "/sign-up"
+                    : page === "Sign in"
+                    ? "/sign-in"
+                    : "/"
+                }
               >
                 {page}
               </Button>
@@ -133,33 +149,18 @@ export default function ResponsiveAppBar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting}  onClick={() => {setting === "Logout" && auth.currentUser ? auth.signOut() : ""}}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            {isSignedIn === true && (
+              <Button
+                onClick={() =>
+                  auth.signOut().then(() => {
+                    alert("You signed out");
+                  })
+                }
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Logout
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </Container>

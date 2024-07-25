@@ -4,7 +4,6 @@ import { db } from "../../firebase";
 import { useParams } from "react-router-dom";
 import "./SingleEvent.css";
 import EventSignUp from "../EventSignUp";
-import SignOut from "../SignOut";
 import AddToCalendar from "../AddToCalendar";
 
 export default function SingleEvent() {
@@ -82,7 +81,6 @@ export default function SingleEvent() {
               </button>
             </div>
 
-            <SignOut />
             <AddToCalendar description={e.description} location={e.location} title={e.title} start={e.startTime} end={e.endTime} date={e.date}/>
 
             <p>
