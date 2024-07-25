@@ -25,7 +25,7 @@ const schema = yup
       .transform(function (value, originalValue) {
         const parsedDate = isDate(originalValue)
           ? originalValue
-          : parse(originalValue, "dd-MM-yyyy", new Date().toString());
+          : parse(originalValue, "yyyy-MM-dd", new Date().toString());
         return parsedDate;
       })
       .typeError("please enter a valid date")
@@ -72,7 +72,7 @@ try {
   schema.validateSync({
     title: "Sample Title",
     description: "Sample Description for an event to be created",
-    date: "12-12-2024",
+    date: "2024-12-12",
     startTime: "10:00",
     endTime: "11:00",
     location: "This is a sample location the staff will enter or rather the length of it",

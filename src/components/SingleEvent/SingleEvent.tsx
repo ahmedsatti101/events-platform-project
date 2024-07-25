@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import "./SingleEvent.css";
 import EventSignUp from "../EventSignUp";
 import SignOut from "../SignOut";
+import AddToCalendar from "../AddToCalendar";
 
 export default function SingleEvent() {
   const { event_id } = useParams();
@@ -82,6 +83,7 @@ export default function SingleEvent() {
             </div>
 
             <SignOut />
+            <AddToCalendar description={e.description} location={e.location} title={e.title} start={e.startTime} end={e.endTime} date={e.date}/>
 
             <p>
               For queries or issues you can send a message to {e.email} or phone{" "}
