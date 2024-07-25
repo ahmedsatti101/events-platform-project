@@ -1,5 +1,6 @@
 import React from 'react';
+import ResponsiveAppBar from './Navbar';
 
 export default function Header() {
-    return <h2>Cycling events</h2>;
+    return <ResponsiveAppBar />;
 };
