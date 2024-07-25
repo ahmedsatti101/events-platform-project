@@ -83,7 +83,7 @@ export default function SingleEvent() {
             </div>
 
             <SignOut />
-            <AddToCalendar description={e.description} location={e.location} title={e.title} start={{date: e.date}} end={{date: e.date}}/>
+            <AddToCalendar description={e.description} location={e.location} title={e.title} start={e.startTime} end={e.endTime} date={e.date}/>
 
             <p>
               For queries or issues you can send a message to {e.email} or phone{" "}

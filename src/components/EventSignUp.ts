@@ -13,10 +13,8 @@ export default function EventSignUp(event_id: string) {
       ) {
         updateDoc(docRef, {
           attendes: arrayUnion(user.email),
-        }).then(() => {
-          console.log(`user signed up to event ${event_id}`)
         }).catch(err => {
-          console.log(err)
+          alert("Something went wrong");
         })
         alert("Thank you signing up!");
       }

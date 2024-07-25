@@ -5,15 +5,17 @@ type Props = {
     description: string,
     location: string,
     title: string,
-    start: {date: string},
-    end: {date: string}
+    start: string,
+    end: string,
+    date: string
 }
 
-export default function AddToCalendar({description, location, title, start, end}: Props) {
+export default function AddToCalendar({description, location, title, start, end, date}: Props) {
   const event: CalendarEvent = {
     title,
     description,
-    start: "2019-12-29",
+    start: `${date} ${start}`,
+    end: `${date} ${end}`,
     location,
     busy: true
   };
