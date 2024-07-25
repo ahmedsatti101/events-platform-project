@@ -256,7 +256,7 @@ describe("CreateEventForm component", () => {
 
       const input = screen.getByTestId("input-date");
 
-      await user.type(input, "11-07-2024");
+      await user.type(input, "2024-07-11");
 
       const saveForm = screen.getByRole("button", { name: /Save/i });
 

@@ -13,7 +13,7 @@ export default function AddToCalendar({description, location, title, start, end}
   const event: CalendarEvent = {
     title,
     description,
-    start: "2019-12-29 18:00:00 +0100",
+    start: "2019-12-29",
     location,
     busy: true
   };
