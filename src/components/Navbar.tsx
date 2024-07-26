@@ -152,7 +152,9 @@ export default function ResponsiveAppBar() {
                 onClick={() =>
                   auth.signOut().then(() => {
                     alert("You signed out");
-                    window.location.href = "/";
+                    if (window.location.href.endsWith("/create-event") || window.location.href.endsWith("/add-admin")) {
+                      window.location.href = "/";
+                    }
                   })
                 }
                 sx={{ my: 2, color: "white", display: "block" }}
