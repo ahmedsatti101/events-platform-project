@@ -1,11 +1,13 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
 module.exports = {
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
   transform: {
     "^.+.tsx?$": ["ts-jest", {}],
   },
   setupFilesAfterEnv: ["./src/setupTests.ts"],
   moduleNameMapper: {
-    "\\.(css|less)$": "<rootDir>/src/styleMock.ts"
-  }
+    "\\.(css|less)$": "<rootDir>/src/styleMock.ts",
+    '^@/(.*)$': '<rootDir>/src/$1'
+  },
+  injectGlobals: true
 };

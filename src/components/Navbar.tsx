@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,18 +7,19 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import PedalBikeIcon from "@mui/icons-material/PedalBike";
 import { auth } from "../firebase";
+import { UserContext } from "../context/UserContext";
 
-const pages = ["Events", "Create event", "Sign up", "Sign in"];
+const pages = ["Events", "Sign up", "Sign in"];
+const adminPages = ["Create event", "Add admin"];
 
 export default function ResponsiveAppBar() {
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const { isAdmin } = useContext(UserContext);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -31,23 +32,13 @@ export default function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   return (
@@ -134,9 +125,7 @@ export default function ResponsiveAppBar() {
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
                 href={
-                  page === "Create event"
-                    ? "/create-event"
-                    : page === "Sign up"
+                  page === "Sign up"
                     ? "/sign-up"
                     : page === "Sign in"
                     ? "/sign-in"
@@ -146,14 +135,24 @@ export default function ResponsiveAppBar() {
                 {page}
               </Button>
             ))}
+            {isAdmin && adminPages.map((page) => (
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: "white", display: "block" }}
+                href={page === "Create event" ? "/create-event" : "/add-admin"}
+              >
+                {page}
+              </Button>
+            ))}
           </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             {isSignedIn === true && (
               <Button
                 onClick={() =>
                   auth.signOut().then(() => {
                     alert("You signed out");
+                    window.location.href = "/";
                   })
                 }
                 sx={{ my: 2, color: "white", display: "block" }}
