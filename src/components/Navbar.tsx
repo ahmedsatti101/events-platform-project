@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,12 +12,14 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import PedalBikeIcon from "@mui/icons-material/PedalBike";
 import { auth } from "../firebase";
+import { UserContext } from "../context/UserContext";
 
 const pages = ["Events", "Sign up", "Sign in"];
 const adminPages = ["Create event", "Add admin"];
 
 export default function ResponsiveAppBar() {
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const { isAdmin } = useContext(UserContext);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -116,9 +118,9 @@ export default function ResponsiveAppBar() {
           >
             LOGO
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }} >
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Button         
+              <Button
                 key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: "white", display: "block" }}
@@ -133,6 +135,16 @@ export default function ResponsiveAppBar() {
                 {page}
               </Button>
             ))}
+            {isAdmin && adminPages.map((page) => (
+              <Button
+                key={page}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: "white", display: "block" }}
+                href={page === "Create event" ? "/create-event" : "/add-admin"}
+              >
+                {page}
+              </Button>
+            ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             {isSignedIn === true && (
@@ -140,6 +152,7 @@ export default function ResponsiveAppBar() {
                 onClick={() =>
                   auth.signOut().then(() => {
                     alert("You signed out");
+                    window.location.href = "/";
                   })
                 }
                 sx={{ my: 2, color: "white", display: "block" }}
