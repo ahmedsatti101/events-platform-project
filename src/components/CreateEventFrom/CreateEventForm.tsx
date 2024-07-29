@@ -19,7 +19,7 @@ const schema = yup
       .string()
       .required("Description is a required field")
       .min(20, "Description must include at least 20 characters")
-      .max(200, "Reached maximum character length"),
+      .max(500, "Reached maximum character length"),
     date: yup
       .date()
       .transform(function (value, originalValue) {
@@ -212,7 +212,7 @@ export default function CreateEventForm() {
         <p id="error-text">{errors.location?.message}</p>
         <br />
 
-        <label htmlFor="phone-number">Phone number: </label>
+        <label htmlFor="phone-number">Phone number:* </label>
         <br />
         <input
           type="text"
@@ -220,12 +220,12 @@ export default function CreateEventForm() {
           id="phone-number"
           onChange={(e) => setPhoneNumber(e.target.value)}
           data-testid="input-phone-number"
-          placeholder="e.g. +44 78963 45621"
+          placeholder="e.g. +447896345621"
         />
         <p id="error-text">{errors.phoneNumber?.message}</p>
         <br />
 
-        <label htmlFor="email">Email: </label>
+        <label htmlFor="email">Email:* </label>
         <br />
         <input
           type="text"

@@ -1,5 +1,13 @@
 #copy-link-button {
   margin-left: auto;
+  font-size: 15px;
+  background-color: rgb(27, 101, 158);
+  color: white;
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 15px;
+  background-color: #0781c7;
+  margin: 5px;
 }
 
 .tooltip {
@@ -38,4 +46,26 @@
 .tooltip:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
+}
+
+h3,
+h2,
+article {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#add-to-calendar-link {
+  margin-top: 5px;
+  display: inline-flex;
+  float: right;
+  margin-bottom: 5%;
+  margin-left: auto;
+  font-size: 15px;
+  background-color: #0781c7;
+  color: white;
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 15px;
+  text-decoration: none;
+  font-family: Arial, Helvetica, sans-serif;
 }

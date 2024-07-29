@@ -116,8 +116,6 @@ export default function ResponsiveAppBar() {
           </Box>
           <PedalBikeIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
-            variant="h5"
-            noWrap
             component="a"
             sx={{
               mr: 2,
@@ -173,7 +171,7 @@ export default function ResponsiveAppBar() {
                 }
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                Logout
+               Sign out 
               </Button>
             )}
           </Box>

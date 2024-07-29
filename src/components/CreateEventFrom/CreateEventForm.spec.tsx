@@ -82,11 +82,11 @@ describe("CreateEventForm component", () => {
     });
 
     it("Phone number label", () => {
-      expect(screen.getByText("Phone number:")).toBeInTheDocument();
+      expect(screen.getByText("Phone number:*")).toBeInTheDocument();
     });
 
     it("Email label", () => {
-      expect(screen.getByText("Email:")).toBeInTheDocument();
+      expect(screen.getByText("Email:*")).toBeInTheDocument();
     });
   });
 
@@ -199,7 +199,7 @@ describe("CreateEventForm component", () => {
 
       await user.type(
         input,
-        "ManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchester"
+        "ManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchester"
       );
 
       const saveForm = screen.getByRole("button", { name: /Save/i });
