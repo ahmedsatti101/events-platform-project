@@ -6,7 +6,8 @@
     "test": "jest",
     "test:watch": "jest --watchAll",
     "magic": "webpack",
-    "start": "react-scripts start"
+    "start": "react-scripts start",
+    "build": "react-scripts build"
   },
   "author": "",
   "license": "ISC",
