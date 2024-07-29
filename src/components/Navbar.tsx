@@ -9,7 +9,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import PedalBikeIcon from "@mui/icons-material/PedalBike";
 import { auth } from "../firebase";
 import { UserContext } from "../context/UserContext";
@@ -93,18 +92,33 @@ export default function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={handleCloseNavMenu} component="a" href={
+                  page === "Sign up"
+                    ? "/sign-up"
+                    : page === "Sign in"
+                    ? "/sign-in"
+                    : "/"
+                }>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
+              {isAdmin && adminPages.map((page) => (
+              <MenuItem
+                key={page}
+                component="a"
+                onClick={handleCloseNavMenu}
+                href={page === "Create event" ? "/create-event" : "/add-admin"}
+              >
+                {page}
+              </MenuItem>
+            ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+          <PedalBikeIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -116,7 +130,7 @@ export default function ResponsiveAppBar() {
               textDecoration: "none",
             }}
           >
-            LOGO
+           Cycling events 
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
