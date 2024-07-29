@@ -60,14 +60,14 @@ export default function SignUp() {
 
   return (
     <>
-      <h2 id="title">Create an account</h2>
-      <section>
+      <h2 id="sign-up-title">Create an account</h2>
+      <section id="sign-up-form">
         <form
           onSubmit={handleSubmit(onSubmit)}
           autoComplete="off"
           data-testid="sign-up-form"
         >
-          <label htmlFor="email" data-testid="email-test">
+          <label htmlFor="email" data-testid="email-test" id="sign-up-email">
             Email:
           </label>
           <br />
@@ -95,9 +95,9 @@ export default function SignUp() {
           <p id="error-text">{errors.password?.message}</p>
           <br />
 
-          <button type="submit">Sign up</button>
+          <button type="submit" id="sign-up-button">Sign up</button>
+        <p id="user-already-exists">Already have an account? <a href="/sign-in"> Sign in</a></p>
         </form>
-        <p>Already have an account? <a href="/sign-in"> Sign in</a></p>
       </section>
     </>
   );

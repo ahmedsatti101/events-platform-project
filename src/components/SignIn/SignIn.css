@@ -1,10 +1,56 @@
-@media screen and (min-width: 601px) {
-  #title {
+@media only screen and (min-width: 601px) {
+  #sign-in-title {
     text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 5%;
+    margin-right: 4%;
+  }
+
+  #sign-in-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 25%;
+    margin-right: 30%;
+    padding-bottom: 5%;
+  }
+
+  #sign-in-button {
+    font-size: medium;
+    background-color: #0781c7;
+    color: white;
+    border: 1px solid;
+    border-radius: 10px;
+    margin-left: 38%;
+    padding: 15px;
+  }
+
+  label[for="email"],
+  label[for="password"] {
     font-family: Arial, Helvetica, sans-serif;
   }
 
-  section {
+  input[type="email"],
+  input[type="password"] {
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%;
+    font-size: medium;
+  }
+
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    background-color: lightblue;
+  }
+
+  #error-text {
+    color: red;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  #sign-in-form {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -15,9 +61,32 @@
     padding-bottom: 5%;
   }
 
-  button {
+  input[type="email"],
+  input[type="password"] {
+    border-radius: 5px;
     font-size: medium;
-    background-color: rgb(27, 101, 158);
+    padding: 10px;
+    margin-left: 10px;
+  }
+
+  label[for="email"],
+  label[for="password"] {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    background-color: lightblue;
+  }
+
+  #error-text {
+    color: red;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  #sign-in-button {
+    font-size: 15px;
+    background-color: #0781c7;
     color: white;
     border: 1px solid;
     border-radius: 10px;
@@ -25,45 +94,8 @@
     padding: 15px;
   }
 
-  label[for="email"] {
+  #sign-in-title {
     font-family: Arial, Helvetica, sans-serif;
-  }
-
-  label[for="password"] {
-    font-family: Arial, Helvetica, sans-serif;
-  }
-
-  input[type="email"] {
-    border-radius: 5px;
-    padding: 10px;
-    width: 100%;
-    font-size: medium;
-  }
-
-  input[type="email"]:focus {
-    background-color: lightblue;
-  }
-
-  input[type="password"]:focus {
-    background-color: lightblue;
-  }
-
-  input[type="password"] {
-    border-radius: 5px;
-    padding: 10px;
-    width: 100%;
-    font-size: medium;
-  }
-
-  #error-text {
-    color: red;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  label[for="password"] {
-    background-color: aqua;
-    /* font-family: Arial, Helvetica, sans-serif; */
+    text-align: center;
   }
 }

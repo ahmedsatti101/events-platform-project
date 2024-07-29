@@ -5,7 +5,7 @@
    */
 
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { queryAllByText, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CreateEventForm from "./CreateEventForm";
 
@@ -24,25 +24,22 @@ describe("CreateEventForm component", () => {
     const element = screen.getByRole("button", { name: /Save/i });
     await user.click(element);
 
-    expect(screen.getByText("title is a required field")).toBeInTheDocument();
-    expect(screen.getByText("title is a required field")).toBeInTheDocument();
+    const timeErrMessage = screen.queryAllByText(/Time must match 24 hour time format/i)
+
+    expect(screen.getByText("Title is a required field")).toBeInTheDocument();
 
     expect(
-      screen.getByText("description is a required field")
+      screen.getByText("Description is a required field")
     ).toBeInTheDocument();
 
-    expect(screen.getByText("please enter a valid date")).toBeInTheDocument();
+    expect(screen.getByText("Please enter a valid date")).toBeInTheDocument();
 
     expect(
-      screen.getByText("startTime must be exactly 5 characters")
-    ).toBeInTheDocument();
+      timeErrMessage[0].textContent
+    ).toContain("Time must match 24 hour time format");
 
     expect(
-      screen.getByText("endTime must be exactly 5 characters")
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText("location is a required field")
+      screen.getByText("Please enter a location")
     ).toBeInTheDocument();
 
     expect(
@@ -51,7 +48,7 @@ describe("CreateEventForm component", () => {
       )
     ).toBeInTheDocument();
 
-    expect(screen.getByText("invalid email address")).toBeInTheDocument();
+    expect(screen.getByText("Invalid email address")).toBeInTheDocument();
   });
 
   describe("form labels", () => {
@@ -85,11 +82,11 @@ describe("CreateEventForm component", () => {
     });
 
     it("Phone number label", () => {
-      expect(screen.getByText("Phone number:")).toBeInTheDocument();
+      expect(screen.getByText("Phone number:*")).toBeInTheDocument();
     });
 
     it("Email label", () => {
-      expect(screen.getByText("Email:")).toBeInTheDocument();
+      expect(screen.getByText("Email:*")).toBeInTheDocument();
     });
   });
 
@@ -202,7 +199,7 @@ describe("CreateEventForm component", () => {
 
       await user.type(
         input,
-        "ManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchester"
+        "ManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchesterManchester"
       );
 
       const saveForm = screen.getByRole("button", { name: /Save/i });
@@ -246,9 +243,9 @@ describe("CreateEventForm component", () => {
 
       await user.click(saveForm);
 
-      const errorElement = screen.getByText(/please enter a valid date/i);
+      const errorElement = screen.getByText(/Please enter a valid date/i);
 
-      expect(errorElement.textContent).toContain("please enter a valid date");
+      expect(errorElement.textContent).toContain("Please enter a valid date");
     });
 
     it("date must not be in the past or current date", async () => {
@@ -292,9 +289,9 @@ describe("CreateEventForm component", () => {
       const saveForm = screen.getByRole("button", { name: /Save/i });
       await user.click(saveForm);
 
-      const text = screen.queryByText(/Time must be in this format 00:00/i);
+      const text = screen.queryByText(/Time must match 24 hour time format/i);
 
-      expect(text?.textContent).toContain("Time must be in this format 00:00");
+      expect(text?.textContent).toContain("Time must match 24 hour time format");
     });
 
     it("Error message displays if start time is in not in the correct format", async () => {
@@ -306,12 +303,12 @@ describe("CreateEventForm component", () => {
       const saveForm = screen.getByRole("button", { name: /Save/i });
       await user.click(saveForm);
 
-      const text = screen.queryByText(
-        /startTime must be exactly 5 characters/i
+      const text = screen.queryAllByText(
+        /Time must match 24 hour time format/i
       );
 
-      expect(text?.textContent).toContain(
-        "startTime must be exactly 5 characters"
+      expect(text[0].textContent).toContain(
+        "Time must match 24 hour time format"
       );
     });
   });
@@ -340,9 +337,9 @@ describe("CreateEventForm component", () => {
       const saveForm = screen.getByRole("button", { name: /Save/i });
       await user.click(saveForm);
 
-      const text = screen.queryByText(/Time must be in this format 00:00/i);
+      const text = screen.queryAllByText(/Time must match 24 hour time format/i);
 
-      expect(text?.textContent).toContain("Time must be in this format 00:00");
+      expect(text[0].textContent).toContain("Time must match 24 hour time format");
     });
 
     it("Error message displays if end time is in not in the correct format", async () => {
@@ -354,10 +351,10 @@ describe("CreateEventForm component", () => {
       const saveForm = screen.getByRole("button", { name: /Save/i });
       await user.click(saveForm);
 
-      const text = screen.queryByText(/endTime must be exactly 5 characters/i);
+      const text = screen.queryAllByText(/Time must match 24 hour time format/i);
 
-      expect(text?.textContent).toContain(
-        "endTime must be exactly 5 characters"
+      expect(text[0].textContent).toContain(
+        "Time must match 24 hour time format"
       );
     });
 
@@ -460,7 +457,7 @@ describe("CreateEventForm component", () => {
 
       await user.click(saveForm);
 
-      const element = screen.queryByText("invalid email address");
+      const element = screen.queryByText("Invalid email address");
 
       expect(element).not.toBeNull();
     });

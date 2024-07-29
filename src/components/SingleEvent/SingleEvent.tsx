@@ -54,6 +54,16 @@ export default function SingleEvent() {
       {event.map((e) => {
         return (
           <>
+            <AddToCalendar
+              description={e.description}
+              location={e.location}
+              title={e.title}
+              start={e.startTime}
+              end={e.endTime}
+              date={e.date}
+            />
+            <br />
+            <br />
             <h2>Description</h2>
             <article id="event-description">{e.description}</article>
 
@@ -66,7 +76,14 @@ export default function SingleEvent() {
             <h3>Where</h3>
             <p>{e.location}</p>
 
-            <button id="sign-up-button" onClick={() => {event_id ? EventSignUp(event_id): console.log("no event id")}}>Sign up</button>
+            <button
+              id="sign-up-button"
+              onClick={() => {
+                event_id ? EventSignUp(event_id) : console.log("no event id");
+              }}
+            >
+              Sign up
+            </button>
 
             <div className="tooltip">
               <button
@@ -80,8 +97,6 @@ export default function SingleEvent() {
                 Copy link
               </button>
             </div>
-
-            <AddToCalendar description={e.description} location={e.location} title={e.title} start={e.startTime} end={e.endTime} date={e.date}/>
 
             <p>
               For queries or issues you can send a message to {e.email} or phone{" "}

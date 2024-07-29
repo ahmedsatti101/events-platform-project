@@ -1,31 +1,31 @@
-@media screen and (min-width: 601px) {
-  #title {
+@media only screen and (min-width: 601px) {
+  #sign-up-title {
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
+    margin-top: 5%;
+    margin-right: 4%;
   }
 
-  section {
+  #sign-up-form {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 30%;
+    margin-left: 25%;
     margin-right: 30%;
-    margin-top: 5%;
-    padding-top: 5%;
     padding-bottom: 5%;
   }
 
-  button {
+  #sign-up-button {
     font-size: medium;
     background-color: rgb(27, 101, 158);
     color: white;
     border: 1px solid;
     border-radius: 10px;
-    margin-left: 30%;
+    margin-left: 38%;
     padding: 15px;
   }
 
-  label[for="email"] {
+  #sign-up-email {
     font-family: Arial, Helvetica, sans-serif;
   }
 
@@ -61,9 +61,57 @@
   }
 }
 
-@media screen and (max-width: 600px) {
-  label[for="password"] {
-    background-color: aqua;
-    /* font-family: Arial, Helvetica, sans-serif; */
+@media only screen and (max-width: 600px) {
+  #sign-up-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-top: 5%;
+    padding-top: 5%;
+    padding-bottom: 5%;
   }
+
+  input[type="email"],
+  input[type="password"] {
+    border-radius: 5px;
+    font-size: medium;
+    padding: 10px;
+    margin-left: 10px;
+  }
+
+  label[for="email"],
+  label[for="password"] {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    background-color: lightblue;
+  }
+
+  #error-text {
+    color: red;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  #sign-up-button {
+    font-size: 15px;
+    background-color: rgb(27, 101, 158);
+    color: white;
+    border: 1px solid;
+    border-radius: 10px;
+    margin-left: 30%;
+    padding: 15px;
+  }
+
+  #sign-up-title {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+  }
+}
+
+#user-already-exists {
+  font-family: Arial, Helvetica, sans-serif;
 }

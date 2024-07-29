@@ -12,14 +12,14 @@ const schema = yup
   .object({
     title: yup
       .string()
-      .required()
+      .required("Title is a required field")
       .min(10, "Title must include at least 10 characters")
       .max(50, "Reached maximum character length"),
     description: yup
       .string()
-      .required()
+      .required("Description is a required field")
       .min(20, "Description must include at least 20 characters")
-      .max(200, "Reached maximum character length"),
+      .max(500, "Reached maximum character length"),
     date: yup
       .date()
       .transform(function (value, originalValue) {
@@ -28,7 +28,7 @@ const schema = yup
           : parse(originalValue, "yyyy-MM-dd", new Date().toString());
         return parsedDate;
       })
-      .typeError("please enter a valid date")
+      .typeError("Please enter a valid date")
       .required()
       .min(
         moment().add(1, "days").startOf("day").toDate(),
@@ -36,21 +36,21 @@ const schema = yup
       ),
     startTime: yup
       .string()
-      .length(5)
-      .matches(/(\d){2}:(\d){2}/, "Time must be in this format 00:00")
-      .required("start time cannot be empty"),
+      .length(5, "Time must match 24 hour time format")
+      .matches(/(\d){2}:(\d){2}/)
+      .required("Start time cannot be empty"),
     endTime: yup
       .string()
-      .length(5)
-      .matches(/(\d){2}:(\d){2}/, "Time must be in this format 00:00")
-      .required("end time cannot be empty")
+      .length(5, "Time must match 24 hour time format")
+      .matches(/(\d){2}:(\d){2}/)
+      .required("End time cannot be empty")
       .test("is-greater", "end time should be greater", function (value) {
         const { startTime } = this.parent;
         return moment(value, "HH:mm").isAfter(moment(startTime, "HH:mm"));
       }),
     location: yup
       .string()
-      .required()
+      .required("Please enter a location")
       .min(20, "Location must include at least 20 characters")
       .max(200, "Reached maximum character length"),
     phoneNumber: yup
@@ -63,7 +63,7 @@ const schema = yup
       .string()
       .matches(
         /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        "invalid email address"
+        "Invalid email address"
       ),
   })
   .required();
@@ -129,9 +129,9 @@ export default function CreateEventForm() {
   return (
     <>
       <h2 id="create-event-form-title">Create event</h2>
-      <p>Field marked with an asterisk (*) are required</p>
+      <p>Fields marked with an asterisk (*) are required</p>
+      <section className="create-event-form">
       <form
-        className="create-event-form"
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
         data-testid="event-form"
@@ -147,7 +147,7 @@ export default function CreateEventForm() {
           onChange={(e) => setTitle(e.target.value)}
           data-testid="input-title"
         />
-        <p>{errors.title?.message}</p>
+        <p id="error-text">{errors.title?.message}</p>
         <br />
 
         <label htmlFor="description">Description:* </label>
@@ -159,7 +159,7 @@ export default function CreateEventForm() {
           onChange={(e) => setDescription(e.target.value)}
           data-testid="input-description"
         />
-        <p>{errors.description?.message}</p>
+        <p id="error-text">{errors.description?.message}</p>
         <br />
 
         <label>Date:* </label>
@@ -167,12 +167,12 @@ export default function CreateEventForm() {
         <input
           type="text"
           {...register("date")}
-          placeholder="dd-mm-yyyy"
+          placeholder="yyyy-mm-dd"
           id="date"
           onChange={(e) => setDate(e.target.value)}
           data-testid="input-date"
         />
-        <p>{errors.date?.message}</p>
+        <p id="error-text">{errors.date?.message}</p>
         <br />
 
         <label htmlFor="start-time">Start time:* (24 hour format)</label>
@@ -180,12 +180,12 @@ export default function CreateEventForm() {
         <input
           type="text"
           {...register("startTime")}
-          placeholder="00:00"
+          placeholder="06:00"
           id="start-time"
           onChange={(e) => setStartTime(e.target.value)}
           data-testid="input-start-time"
         />
-        <p>{errors.startTime?.message}</p>
+        <p id="error-text">{errors.startTime?.message}</p>
         <br />
 
         <label htmlFor="end-time">End time:* (24 hour format)</label>
@@ -193,12 +193,12 @@ export default function CreateEventForm() {
         <input
           type="text"
           {...register("endTime")}
-          placeholder="00:00"
+          placeholder="23:00"
           id="end-time"
           onChange={(e) => setEndTime(e.target.value)}
           data-testid="input-end-time"
         />
-        <p>{errors.endTime?.message}</p>
+        <p id="error-text">{errors.endTime?.message}</p>
         <br />
 
         <label>Location:*</label>
@@ -209,10 +209,10 @@ export default function CreateEventForm() {
           onChange={(e) => setLocation(e.target.value)}
           data-testid="input-location"
         ></textarea>
-        <p>{errors.location?.message}</p>
+        <p id="error-text">{errors.location?.message}</p>
         <br />
 
-        <label htmlFor="phone-number">Phone number: </label>
+        <label htmlFor="phone-number">Phone number:* </label>
         <br />
         <input
           type="text"
@@ -220,11 +220,12 @@ export default function CreateEventForm() {
           id="phone-number"
           onChange={(e) => setPhoneNumber(e.target.value)}
           data-testid="input-phone-number"
+          placeholder="e.g. +447896345621"
         />
-        <p>{errors.phoneNumber?.message}</p>
+        <p id="error-text">{errors.phoneNumber?.message}</p>
         <br />
 
-        <label htmlFor="email">Email: </label>
+        <label htmlFor="email">Email:* </label>
         <br />
         <input
           type="text"
@@ -232,15 +233,16 @@ export default function CreateEventForm() {
           id="email"
           onChange={(e) => setEmail(e.target.value)}
           data-testid="input-email"
+          placeholder="email@example.com"
         />
-        <p>{errors.email?.message}</p>
+        <p id="error-text">{errors.email?.message}</p>
         <br />
 
         <footer>
-          <button type="submit">Save</button>
-          {/* <button>Cancel</button> */}
+          <button type="submit" id="save-event-button">Save</button>
         </footer>
       </form>
+      </section>
     </>
   );
 }

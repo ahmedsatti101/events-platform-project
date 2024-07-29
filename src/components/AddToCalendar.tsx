@@ -1,5 +1,6 @@
 import React from "react";
 import { google, CalendarEvent } from "calendar-link";
+import EventIcon from '@mui/icons-material/Event';
 
 type Props = {
     description: string,
@@ -22,7 +23,7 @@ export default function AddToCalendar({description, location, title, start, end,
 
   return (
     <>
-      <a href={google(event)} target="_blank"><button>Add to calendar</button></a>
+      <a href={google(event)} target="_blank" id="add-to-calendar-link">Add to calendar</a>
     </>
   );
 }
