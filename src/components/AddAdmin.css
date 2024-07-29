@@ -1,0 +1,17 @@
+#add-admin-button {
+  font-size: medium;
+  background-color: rgb(27, 101, 158);
+  color: white;
+  border: 1px solid;
+  border-radius: 10px;
+  margin-left: auto;
+  padding: 15px;
+}
+
+form {
+  margin-top: 10px;
+}
+
+#admin-email-input {
+  width: auto;
+}

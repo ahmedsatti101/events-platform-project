@@ -58,8 +58,8 @@ export default function SignIn() {
 
   return (
     <>
-      <h2 id="title">Sign in</h2>
-      <section>
+      <h2 id="sign-in-title">Sign in</h2>
+      <section id="sign-in-form">
         <form
           onSubmit={handleSubmit(onSubmit)}
           autoComplete="off"
@@ -92,7 +92,7 @@ export default function SignIn() {
           <p id="error-text">{errors.password?.message}</p>
           <br />
 
-          <button type="submit">Sign in</button>
+          <button type="submit" id="sign-in-button">Sign in</button>
         </form>
       </section>
     </>

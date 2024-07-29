@@ -1,10 +1,16 @@
 #event-card {
-    border: 1px solid;
-    margin: 1%;
-    box-shadow: 10px 10px 12px;
+  border: 1px solid;
+  margin: 1%;
+  box-shadow: 10px 10px 12px;
 }
 
 #sign-up-button {
-    text-transform: none;
-    margin-left:auto;
+  text-transform: none;
+  margin-left: auto;
+}
+
+@media only screen and (max-width: 600px) {
+  #event-card {
+    margin-top: 10px;
+  }
 }

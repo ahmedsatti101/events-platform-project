@@ -4,6 +4,7 @@ import { httpsCallable } from "firebase/functions";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import "./AddAdmin.css";
 
 const schema = yup
   .object({
@@ -53,9 +54,10 @@ export default function AddAdmin() {
           onChange={(e) => {
             setEmail(e.target.value);
           }}
+          id="admin-email-input"
         />
         <p id="error-text">{errors.email?.message}</p>
-        <button type="submit">Submit</button>
+        <button type="submit" id="add-admin-button">Submit</button>
       </form>
     </>
   );

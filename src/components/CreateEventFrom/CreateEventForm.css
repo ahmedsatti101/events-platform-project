@@ -1,39 +1,54 @@
-@media (min-width: 600px) and (max-width: 1000px) {
-    input[type="text"],
-    textarea,
-    input[type="time"] {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: block;
-        border: 1px solid black;
-        border-radius: 4px;
-        font-size: 80px;
-        resize: none;
-    }
+@media only screen and (min-width: 601px) {
+  #create-event-form-title {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+  }
 
-    #create-event-form-title {
-        text-align: center;
-        font-family: sans-serif;
-        font-size: 100px;
-    }
-
-    label {
-        font-size: 100px;
-    }
-
-    footer {
-        display: grid;
-        grid-template-columns: auto auto;
-        gap: 20px;
-    }
-
-    button {
-        font-size: 5rem;
-        border-radius: 10px;
-    }
+  p {
+    font-family: Arial, Helvetica, sans-serif;
+  }
 }
 
-.create-event-form {
-    align-items: center;
+@media only screen and (max-width: 600px) {
+  #create-event-form-title {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+  }
+
+  p {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  #save-event-button {
+    border-radius: 5px;
+    font-size: 30px;
+    background-color: rgb(27, 101, 158);
+    color: white;
+    border: 1px solid;
+  }
+}
+
+label {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#error-text {
+  color: red;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input,
+textarea {
+  border-radius: 5px;
+  padding: 10px;
+  font-size: medium;
+}
+
+input:focus,
+textarea:focus {
+  background-color: lightblue;
+}
+
+#save-event-button {
+  margin-left: auto;
 }
