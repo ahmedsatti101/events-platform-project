@@ -5,7 +5,7 @@
    */
 
 import React from "react";
-import { queryAllByText, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CreateEventForm from "./CreateEventForm";
 
