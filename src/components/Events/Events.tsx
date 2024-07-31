@@ -59,7 +59,7 @@ export default function ViewAllEvents() {
     <>
       {events.map((event) => {
         return (
-          <Card key={event.id} id="event-card">
+          <Card key={event.id} id="event-card" data-testid="events">
             <CardHeader
               title={event.title}
               subheader={`Starting at ${event.startTime} on ${event.date}`}
