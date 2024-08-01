@@ -1,4 +1,6 @@
 const path = require("path");
+const webpack = require("webpack");
+
 module.exports = {
   entry: "./src/index.tsx",
   mode: "development",
@@ -31,4 +33,9 @@ module.exports = {
     filename: "bundle.js",
     path: path.resolve(__dirname, "public"),
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+        process: "process/browser"
+    })
+  ]
 };

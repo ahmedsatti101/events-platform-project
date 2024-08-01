@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { functions } from "../firebase";
+import { functions } from "../../firebase";
 import { httpsCallable } from "firebase/functions";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";

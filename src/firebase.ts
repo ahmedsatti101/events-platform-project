@@ -12,16 +12,16 @@ const appId = process.env.REACT_APP_APP_ID;
 const measurementId = process.env.REACT_APP_MEASUREMENT_ID;
 
 const config = {
-  apiKey: apiKey,
-  authDomain: authDomain,
-  projectId: projectId,
-  storageBucket: storageBucket,
-  messagingSenderId: messagingSenderId,
-  appId: appId,
-  measurementId: measurementId,
+  apiKey,
+  authDomain,
+  projectId,
+  storageBucket,
+  messagingSenderId,
+  appId,
+  measurementId
 };
 
 const app = initializeApp(config);
 export const db = getFirestore(app);
-export const auth = getAuth();
+export const auth = getAuth(app);
 export const functions = getFunctions();
