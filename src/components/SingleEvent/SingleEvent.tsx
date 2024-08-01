@@ -22,7 +22,7 @@ export default function SingleEvent() {
 
           setEvent(data);
         } catch (error) {
-          console.log(error);
+          alert("Could not display this event.");
         }
       };
 
@@ -64,6 +64,7 @@ export default function SingleEvent() {
             />
             <br />
             <br />
+            <h1>{e.title}</h1>
             <h2>Description</h2>
             <article id="event-description">{e.description}</article>
 
@@ -79,7 +80,7 @@ export default function SingleEvent() {
             <button
               id="sign-up-button"
               onClick={() => {
-                event_id ? EventSignUp(event_id) : console.log("no event id");
+                event_id ? EventSignUp(event_id) : alert("Something went wrong");
               }}
             >
               Sign up

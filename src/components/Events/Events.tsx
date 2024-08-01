@@ -3,11 +3,10 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import { styled } from "@mui/material/styles";
 import CardHeader from "@mui/material/CardHeader";
 import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button } from "@mui/material";
@@ -37,7 +36,7 @@ export default function ViewAllEvents() {
 
         setEvents(data);
       } catch (error) {
-        console.log(error);
+        alert("Something went wrong.");
       }
     };
 

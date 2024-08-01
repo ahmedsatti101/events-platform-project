@@ -35,10 +35,10 @@ export default function AddAdmin() {
     const addAdminRole = httpsCallable(functions, "addAdminRole");
     addAdminRole({ email })
       .then((result) => {
-        console.log(result);
+        alert(`${email} has been made an admin.`)
       })
       .catch((err) => {
-        console.log(err);
+        alert("Something went wrong. Try again later.");
       });
   };
 

@@ -80,7 +80,7 @@ try {
     email: "sample@example.com",
   });
 } catch (err) {
-  console.log(err);
+  
 }
 
 type FormData = yup.InferType<typeof schema>;
@@ -116,13 +116,13 @@ export default function CreateEventForm() {
         email,
       })
         .then(() => {
-          alert("data submitted!");
+          alert("Event created");
         })
         .catch((err) => {
-          alert(err);
+          alert("Error creating event. Try again later.");
         });
     } catch (error) {
-      alert(error);
+      alert("Error creating event. Try again later.");
     }
   };
 

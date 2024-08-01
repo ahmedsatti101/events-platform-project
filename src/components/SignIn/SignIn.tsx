@@ -25,7 +25,7 @@ try {
     password: "testpass",
   });
 } catch (error) {
-  console.log(error);
+  
 }
 
 type FormData = yup.InferType<typeof schema>;
@@ -51,7 +51,7 @@ export default function SignIn() {
         if (err.code === "auth/invalid-credential") {
           alert("Incorrect email or password");
         } else {
-          console.log(err);
+          alert("Could not sign you in. Try again later.")
         }
       });
   };

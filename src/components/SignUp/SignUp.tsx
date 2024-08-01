@@ -28,7 +28,7 @@ try {
     password: "testpass",
   });
 } catch (error) {
-  console.log(error);
+  
 }
 
 type FormData = yup.InferType<typeof schema>;
@@ -51,10 +51,10 @@ export default function SignUp() {
           alert("Signed up as: " + creds.user.email);
         })
         .catch((err) => {
-          console.log(err);
+          alert("Error creating account. Try again later.");
         });
     } catch (error) {
-      console.log(error);
+      alert("Error creating account. Try again later.");
     }
   };
 
