@@ -152,13 +152,12 @@ export default function CreateEventForm() {
 
         <label htmlFor="description">Description:* </label>
         <br />
-        <input
-          type="text"
+        <textarea
           {...register("description")}
           id="description"
           onChange={(e) => setDescription(e.target.value)}
           data-testid="input-description"
-        />
+        ></textarea>
         <p id="error-text">{errors.description?.message}</p>
         <br />
 
