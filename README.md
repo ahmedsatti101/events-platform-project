@@ -39,15 +39,15 @@ Tests for the app can be run using
 ## Connect to Firebase
 This project uses `Firebase` as it's backend.
 
-So to run locally you will need to:
+So to run it locally you will need to:
 
 1. Create a firebase application by going to https://firebase.google.com/,
 
-2. Click on `go to console` button on top right
+2. Click on `Go to console` button top right
 
-3. Assumung this the first time you work with Firebase then select `Get started with a Firebase project` option
+3. Assuming this the first time you work with Firebase, select `Get started with a Firebase project` option
 
-4. Type a name of your project, and click `Continue`
+4. Type a name for your project, and click `Continue`
 
 5. Select the option you prefer for Google Analytics, and click `Continue`
 
@@ -55,13 +55,25 @@ So to run locally you will need to:
 
 7. After project is created, click `Continue`. You will be directed your project homepage.
 
-8. Under `Get started by adding Firebase to your app` select the `Web` option
+8. Under `Get started by adding Firebase to your app` select the `Web` option (`</>` icon)
 
 9. Provide app nickname and click on `Register app`
 
-10. Firebase SDK was already installed when you installed the needed dependencies above
+10. Firebase SDK was already installed when you installed the project dependencies above
 
-11. You need to copy the `firebaseConfig` object values on screen into the `.env` file, which you need to create, in the root directory.
+11. You need to copy the `firebaseConfig` object values on screen, without the quotes, into a `.env` file, which you need to create, in the root directory.
+
+```
+const firebaseConfig = {
+  apiKey: "xxxxxx", <-- copy what is inside the quotes
+  authDomain: "xxxxx",
+  projectId: "xxxxxx",
+  storageBucket: "xxxxxx",
+  messagingSenderId: "xxxx",
+  appId: "xxxxx",
+  measurementId: "xxxx"
+};
+```
 
 12. Take a look at `.env.example` to see how you should do it.
 
@@ -83,7 +95,7 @@ So to run locally you will need to:
 
 2. Login into firebase with `firebase login`
 
-3. For option `Usage and error reporting information` select No, and click `Enter`
+3. For option `Usage and error reporting information` select the option you prefer, and click `Enter`
 
 4. Initialize firebase function with command
 
@@ -95,15 +107,15 @@ So to run locally you will need to:
 
 7. For `What language` select `Typescript`
 
-8. To use `ESLint` press `Enter` to select default `Yes`
+8. To use `ESLint` press `Enter` to select (default `Yes`)
 
 9. Press `Enter` to start installing dependencies
 
-10. After installing the dependencies, copy the contents of file `firebaseFunctionsIndex.ts` in the root directory to replace contents of `functions/src/index.ts`
+10. After installing the dependencies, copy the contents of `firebaseFunctionsIndex.txt` in the root directory to replace contents of `functions/src/index.ts`
 
 11. Deploy the function to firebase by running `firebase deploy --only functions`
 
-12. Firebase might ask you to go on `Pay as you go` plan in order to complete the deployment.
+12. Firebase might ask you to go on the `Pay as you go` plan in order to complete the deployment.
 
 13. After deploying the function, the app is ready to use.
 
@@ -116,26 +128,26 @@ The app is hosted on Netlify and you can go [here](https://cyclingevents.netlify
 
 1. Go to [Demo app](https://cyclingevents.netlify.app/) 
 
-2. On the app homepage click on `Sign Up`
-3. Enter email and password
+2. On the app homepage click on `Sign Up` to create an account
+3. Enter an email and password
 4. Click `Sign up`
 5. Navigate to https://cyclingevents.netlify.app/add-admin
-2. Enter the email of the user
+2. Enter the email you signed up with
 3. Click `Submit`
-4. In the navigation bar, you will able to see the `Create event` and `Add admin` menu items.
+4. Refresh the app to see the `Create event` and `Add admin` menu items in the navigation bar.
 
 ### Local app
 
 #### Add adminitrator
 To add new administrator user:
 
-1. Run the app `npm run start`
+1. Run the app with `npm run start`
 2. On the app homepage click on `Sign Up`
 3. Enter email and password
-4. Click `Sign in`
+4. Click `Sign up`
 
 Make yourself an Administrator
 1. Navigate to http://localhost:3000/add-admin
-2. Enter the email of the user
+2. Enter the email you signed up with
 3. Click `Submit`
-4. In the navigation bar, you will able to see the `Create event` and `Add admin` menu items.
+4. Refresh the app to see the `Create event` and `Add admin` menu items in the navigation bar.
