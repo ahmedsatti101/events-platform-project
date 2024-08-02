@@ -6,3 +6,6 @@ public/bundle.js
 # Local Netlify folder
 .netlify
 build
+functions
+firebase.json
+.firebaserc
