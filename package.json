@@ -7,7 +7,8 @@
     "test:watch": "jest --watchAll",
     "magic": "webpack",
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "cypress": "npx cypress open"
   },
   "author": "",
   "license": "ISC",
