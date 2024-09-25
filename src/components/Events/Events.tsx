@@ -79,6 +79,7 @@ export default function ViewAllEvents() {
             </Grid>
             <CardActions id="event-actions">
               <div
+                data-testid="expand-more-icon"
                 onClick={() => handleExpandClick(event.id)}
                 aria-label="show more"
                 style={{

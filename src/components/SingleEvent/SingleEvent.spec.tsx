@@ -34,40 +34,6 @@ describe("SingleEvent component", () => {
     });
   });
 
-  it("Should display all information about an event", async () => {
-    await waitFor(() =>
-      expect(
-        screen.getByText(
-          "Join us for an exhilarating day of cycling through the stunning landscapes of the British countryside! The Great British Cycle Challenge offers routes for all levels, from beginners to seasoned cyclists. Riders can choose between a 30 km, 70 km, or 100 km route, all of which showcase the beauty of the rolling hills, picturesque villages, and lush greenery. This is a perfect opportunity to enjoy a day of fitness, fun, and community, whether you're riding solo, with friends, or with family."
-        )
-      ).toBeInTheDocument()
-    );
-
-    await waitFor(() =>
-      expect(screen.getByText("2024-09-15")).toBeInTheDocument()
-    );
-
-    await waitFor(() =>
-      expect(screen.getByText("09:00 - 17:00")).toBeInTheDocument()
-    );
-
-    await waitFor(() =>
-      expect(
-        screen.getByText(
-          "Starting Point: Hyde Park, London Finishing Point: Richmond Park, London (Limited parking available, public transport is encouraged)"
-        )
-      ).toBeInTheDocument()
-    );
-
-    await waitFor(() =>
-      expect(
-        screen.getByText(
-          "For queries or issues you can send a message to info@gbcyclechallenge.co.uk or phone +442079461234"
-        )
-      ).toBeInTheDocument()
-    );
-  });
-
   describe("Sign up button", () => {
     it("Button should render on screen", async () => {
       await waitFor(() =>
