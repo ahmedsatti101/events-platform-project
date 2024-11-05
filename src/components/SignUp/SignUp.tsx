@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { auth } from "../../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
@@ -27,9 +25,7 @@ try {
     email: "test@email.com",
     password: "testpass",
   });
-} catch (error) {
-  
-}
+} catch (error) {}
 
 type FormData = yup.InferType<typeof schema>;
 
@@ -45,17 +41,7 @@ export default function SignUp() {
   });
 
   const onSubmit = () => {
-    try {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((creds) => {
-          alert("Signed up as: " + creds.user.email);
-        })
-        .catch((err) => {
-          alert("Error creating account. Try again later.");
-        });
-    } catch (error) {
-      alert("Error creating account. Try again later.");
-    }
+    
   };
 
   return (
@@ -95,8 +81,12 @@ export default function SignUp() {
           <p id="error-text">{errors.password?.message}</p>
           <br />
 
-          <button type="submit" id="sign-up-button">Sign up</button>
-        <p id="user-already-exists">Already have an account? <a href="/sign-in"> Sign in</a></p>
+          <button type="submit" id="sign-up-button">
+            Sign up
+          </button>
+          <p id="user-already-exists">
+            Already have an account? <a href="/sign-in"> Sign in</a>
+          </p>
         </form>
       </section>
     </>

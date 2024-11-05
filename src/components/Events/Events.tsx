@@ -11,7 +11,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import Grid from "@mui/material/Grid";
 import "./Events.css";
 import { ScanCommand } from "@aws-sdk/client-dynamodb";
-import { dbClient } from "../../firebase";
+import { dbClient } from "../../Dbclient";
 
 export default function ViewAllEvents() {
   const [events, setEvents] = useState<any[]>();
@@ -20,9 +20,9 @@ export default function ViewAllEvents() {
 
   useEffect(() => {
     const fetchData = async () => {
-        const command = new ScanCommand({TableName: "events"});
-        const res = await dbClient.send(command)
-        setEvents(res.Items)
+      const command = new ScanCommand({ TableName: "events" });
+      const res = await dbClient.send(command);
+      setEvents(res.Items);
     };
 
     fetchData().finally(() => setLoading(false));
@@ -59,7 +59,9 @@ export default function ViewAllEvents() {
                 <LocationOnOutlinedIcon />
               </Grid>
               <Grid item>
-                <CardContent id="event-location">{event.location.S}</CardContent>
+                <CardContent id="event-location">
+                  {event.location.S}
+                </CardContent>
               </Grid>
             </Grid>
             <CardActions id="event-actions">
@@ -76,11 +78,19 @@ export default function ViewAllEvents() {
                 <ExpandMoreIcon />
               </div>
               <p>Learn more</p>
-              <Button variant="contained" id="sign-up-button" href={`events/${event.eventId.S}`}>
+              <Button
+                variant="contained"
+                id="sign-up-button"
+                href={`events/${event.eventId.S}`}
+              >
                 Sign up
               </Button>
             </CardActions>
-            <Collapse in={expanded[event.eventId.S]} timeout="auto" unmountOnExit>
+            <Collapse
+              in={expanded[event.eventId.S]}
+              timeout="auto"
+              unmountOnExit
+            >
               <CardContent className="event-info">
                 <Typography paragraph>Description</Typography>
                 <Typography paragraph id="event-description">

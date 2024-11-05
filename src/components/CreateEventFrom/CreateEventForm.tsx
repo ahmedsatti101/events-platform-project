@@ -7,7 +7,7 @@ import { parse, isDate } from "date-fns";
 import moment from "moment";
 import { PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { v4 as uuidv4 } from "uuid";
-import { dbClient } from "../../firebase";
+import { dbClient } from "../../Dbclient";
 
 const schema = yup
   .object({
@@ -76,13 +76,12 @@ try {
     date: "2024-12-12",
     startTime: "10:00",
     endTime: "11:00",
-    location: "This is a sample location the staff will enter or rather the length of it",
+    location:
+      "This is a sample location the staff will enter or rather the length of it",
     phoneNumber: "+447625103347",
     email: "sample@example.com",
   });
-} catch (err) {
-  
-}
+} catch (err) {}
 
 type FormData = yup.InferType<typeof schema>;
 
@@ -106,24 +105,25 @@ export default function CreateEventForm() {
 
   const onSubmit = async () => {
     const input = {
-        "Item": {
-            "eventId": {"S": uuidv4()},
-            "title": {"S": title},
-            "date": {"S": date},
-            "location": {"S": location},
-            "description": {"S": description},
-            "startTime": {"S": startTime},
-            "endTime": {"S": endTime},
-            "phoneNumber": {"S": phoneNumber},
-            "email": {"S": email}
-        },
-        "TableName": "events"
+      Item: {
+        eventId: { S: uuidv4() },
+        title: { S: title },
+        date: { S: date },
+        location: { S: location },
+        description: { S: description },
+        startTime: { S: startTime },
+        endTime: { S: endTime },
+        phoneNumber: { S: phoneNumber },
+        email: { S: email },
+      },
+      TableName: "events",
     };
 
     const command = new PutItemCommand(input);
-    await dbClient.send(command)
-        .then(() => alert("Event created!"))
-        .catch((e) => console.log(e))
+    await dbClient
+      .send(command)
+      .then(() => alert("Event created!"))
+      .catch((e) => console.log(e));
   };
 
   return (
@@ -131,116 +131,118 @@ export default function CreateEventForm() {
       <h2 id="create-event-form-title">Create event</h2>
       <p>Fields marked with an asterisk (*) are required</p>
       <section className="create-event-form">
-      <form
-        autoComplete="off"
-        onSubmit={handleSubmit(onSubmit)}
-        data-testid="event-form"
-      >
-        <label htmlFor="title" data-testid="title-test">
-          Title:*{" "}
-        </label>
-        <br />
-        <input
-          type="text"
-          {...register("title")}
-          id="title"
-          onChange={(e) => setTitle(e.target.value)}
-          data-testid="input-title"
-        />
-        <p id="error-text">{errors.title?.message}</p>
-        <br />
+        <form
+          autoComplete="off"
+          onSubmit={handleSubmit(onSubmit)}
+          data-testid="event-form"
+        >
+          <label htmlFor="title" data-testid="title-test">
+            Title:*{" "}
+          </label>
+          <br />
+          <input
+            type="text"
+            {...register("title")}
+            id="title"
+            onChange={(e) => setTitle(e.target.value)}
+            data-testid="input-title"
+          />
+          <p id="error-text">{errors.title?.message}</p>
+          <br />
 
-        <label htmlFor="description">Description:* </label>
-        <br />
-        <textarea
-          {...register("description")}
-          id="description"
-          onChange={(e) => setDescription(e.target.value)}
-          data-testid="input-description"
-        ></textarea>
-        <p id="error-text">{errors.description?.message}</p>
-        <br />
+          <label htmlFor="description">Description:* </label>
+          <br />
+          <textarea
+            {...register("description")}
+            id="description"
+            onChange={(e) => setDescription(e.target.value)}
+            data-testid="input-description"
+          ></textarea>
+          <p id="error-text">{errors.description?.message}</p>
+          <br />
 
-        <label>Date:* </label>
-        <br />
-        <input
-          type="text"
-          {...register("date")}
-          placeholder="yyyy-mm-dd"
-          id="date"
-          onChange={(e) => setDate(e.target.value)}
-          data-testid="input-date"
-        />
-        <p id="error-text">{errors.date?.message}</p>
-        <br />
+          <label>Date:* </label>
+          <br />
+          <input
+            type="text"
+            {...register("date")}
+            placeholder="yyyy-mm-dd"
+            id="date"
+            onChange={(e) => setDate(e.target.value)}
+            data-testid="input-date"
+          />
+          <p id="error-text">{errors.date?.message}</p>
+          <br />
 
-        <label htmlFor="start-time">Start time:* (24 hour format)</label>
-        <br />
-        <input
-          type="text"
-          {...register("startTime")}
-          placeholder="06:00"
-          id="start-time"
-          onChange={(e) => setStartTime(e.target.value)}
-          data-testid="input-start-time"
-        />
-        <p id="error-text">{errors.startTime?.message}</p>
-        <br />
+          <label htmlFor="start-time">Start time:* (24 hour format)</label>
+          <br />
+          <input
+            type="text"
+            {...register("startTime")}
+            placeholder="06:00"
+            id="start-time"
+            onChange={(e) => setStartTime(e.target.value)}
+            data-testid="input-start-time"
+          />
+          <p id="error-text">{errors.startTime?.message}</p>
+          <br />
 
-        <label htmlFor="end-time">End time:* (24 hour format)</label>
-        <br />
-        <input
-          type="text"
-          {...register("endTime")}
-          placeholder="23:00"
-          id="end-time"
-          onChange={(e) => setEndTime(e.target.value)}
-          data-testid="input-end-time"
-        />
-        <p id="error-text">{errors.endTime?.message}</p>
-        <br />
+          <label htmlFor="end-time">End time:* (24 hour format)</label>
+          <br />
+          <input
+            type="text"
+            {...register("endTime")}
+            placeholder="23:00"
+            id="end-time"
+            onChange={(e) => setEndTime(e.target.value)}
+            data-testid="input-end-time"
+          />
+          <p id="error-text">{errors.endTime?.message}</p>
+          <br />
 
-        <label>Location:*</label>
-        <br />
-        <textarea
-          {...register("location")}
-          id="location"
-          onChange={(e) => setLocation(e.target.value)}
-          data-testid="input-location"
-        ></textarea>
-        <p id="error-text">{errors.location?.message}</p>
-        <br />
+          <label>Location:*</label>
+          <br />
+          <textarea
+            {...register("location")}
+            id="location"
+            onChange={(e) => setLocation(e.target.value)}
+            data-testid="input-location"
+          ></textarea>
+          <p id="error-text">{errors.location?.message}</p>
+          <br />
 
-        <label htmlFor="phone-number">Phone number:* </label>
-        <br />
-        <input
-          type="text"
-          {...register("phoneNumber")}
-          id="phone-number"
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          data-testid="input-phone-number"
-          placeholder="e.g. +447896345621"
-        />
-        <p id="error-text">{errors.phoneNumber?.message}</p>
-        <br />
+          <label htmlFor="phone-number">Phone number:* </label>
+          <br />
+          <input
+            type="text"
+            {...register("phoneNumber")}
+            id="phone-number"
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            data-testid="input-phone-number"
+            placeholder="e.g. +447896345621"
+          />
+          <p id="error-text">{errors.phoneNumber?.message}</p>
+          <br />
 
-        <label htmlFor="email">Email:* </label>
-        <br />
-        <input
-          type="text"
-          {...register("email")}
-          id="email"
-          onChange={(e) => setEmail(e.target.value)}
-          data-testid="input-email"
-          placeholder="email@example.com"
-        />
-        <p id="error-text">{errors.email?.message}</p>
-        <br />
+          <label htmlFor="email">Email:* </label>
+          <br />
+          <input
+            type="text"
+            {...register("email")}
+            id="email"
+            onChange={(e) => setEmail(e.target.value)}
+            data-testid="input-email"
+            placeholder="email@example.com"
+          />
+          <p id="error-text">{errors.email?.message}</p>
+          <br />
 
-        <footer>
-          <button type="submit" id="save-event-button">Save</button>
-        </footer>
-      </form>
+          <footer>
+            <button type="submit" id="save-event-button">
+              Save
+            </button>
+          </footer>
+        </form>
       </section>
     </>
   );

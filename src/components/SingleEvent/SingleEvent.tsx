@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 import "./SingleEvent.css";
 import EventSignUp from "../EventSignUp";
 import AddToCalendar from "../AddToCalendar";
-import { dbClient } from "../../firebase";
-import {GetItemCommand} from "@aws-sdk/client-dynamodb";
+import { dbClient } from "../../Dbclient";
+import { GetItemCommand } from "@aws-sdk/client-dynamodb";
 
 export default function SingleEvent() {
   const { event_id } = useParams();
@@ -14,18 +14,18 @@ export default function SingleEvent() {
     if (event_id) {
       const fetchData = async () => {
         const input = {
-            "Key": {
-                "eventId": {
-                    "S": event_id
-                }
+          Key: {
+            eventId: {
+              S: event_id,
             },
-            "TableName": "events"
+          },
+          TableName: "events",
         };
         const command = new GetItemCommand(input);
         const res = await dbClient.send(command);
         const data = [];
 
-        data.push(res.Item)
+        data.push(res.Item);
 
         setEvent(data);
       };
@@ -84,7 +84,9 @@ export default function SingleEvent() {
             <button
               id="sign-up-button"
               onClick={() => {
-                event_id ? EventSignUp(event_id) : alert("Something went wrong");
+                event_id
+                  ? EventSignUp(event_id)
+                  : alert("Something went wrong");
               }}
             >
               Sign up
@@ -104,7 +106,8 @@ export default function SingleEvent() {
             </div>
 
             <p>
-              For queries or issues you can send a message to {e.email.S} or phone {e.phoneNumber.S}
+              For queries or issues you can send a message to {e.email.S} or
+              phone {e.phoneNumber.S}
             </p>
           </>
         );
