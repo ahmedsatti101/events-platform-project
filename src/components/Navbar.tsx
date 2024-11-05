@@ -10,7 +10,6 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import PedalBikeIcon from "@mui/icons-material/PedalBike";
-import { auth } from "../firebase";
 import { UserContext } from "../context/UserContext";
 
 const pages = ["Events", "Sign up", "Sign in"];
@@ -20,13 +19,13 @@ export default function ResponsiveAppBar() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const { isAdmin } = useContext(UserContext);
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsSignedIn(!!user);
-    });
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged((user) => {
+  //     setIsSignedIn(!!user);
+  //   });
 
-    return () => unsubscribe();
-  }, []);
+  //   return () => unsubscribe();
+  // }, []);
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -158,7 +157,7 @@ export default function ResponsiveAppBar() {
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
+          {/* <Box sx={{ flexGrow: 0 }}>
             {isSignedIn === true && (
               <Button
                 onClick={() =>
@@ -174,7 +173,7 @@ export default function ResponsiveAppBar() {
                Sign out 
               </Button>
             )}
-          </Box>
+          </Box> */}
         </Toolbar>
       </Container>
     </AppBar>

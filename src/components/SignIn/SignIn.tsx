@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
@@ -24,9 +22,7 @@ try {
     email: "test@email.com",
     password: "testpass",
   });
-} catch (error) {
-  
-}
+} catch (error) {}
 
 type FormData = yup.InferType<typeof schema>;
 
@@ -43,17 +39,7 @@ export default function SignIn() {
   });
 
   const onSubmit = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((creds) => {
-        alert("Logged in as: " + creds.user.email);
-      })
-      .catch((err) => {
-        if (err.code === "auth/invalid-credential") {
-          alert("Incorrect email or password");
-        } else {
-          alert("Could not sign you in. Try again later.")
-        }
-      });
+    
   };
 
   return (
@@ -92,7 +78,9 @@ export default function SignIn() {
           <p id="error-text">{errors.password?.message}</p>
           <br />
 
-          <button type="submit" id="sign-in-button">Sign in</button>
+          <button type="submit" id="sign-in-button">
+            Sign in
+          </button>
         </form>
       </section>
     </>

@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { functions } from "../../firebase";
-import { httpsCallable } from "firebase/functions";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -32,14 +30,7 @@ export default function AddAdmin() {
   });
 
   const onSubmit = () => {
-    const addAdminRole = httpsCallable(functions, "addAdminRole");
-    addAdminRole({ email })
-      .then((result) => {
-        alert(`${email} has been made an admin.`)
-      })
-      .catch((err) => {
-        alert("Something went wrong. Try again later.");
-      });
+    
   };
 
   return (
@@ -57,7 +48,9 @@ export default function AddAdmin() {
           id="admin-email-input"
         />
         <p id="error-text">{errors.email?.message}</p>
-        <button type="submit" id="add-admin-button">Submit</button>
+        <button type="submit" id="add-admin-button">
+          Submit
+        </button>
       </form>
     </>
   );
