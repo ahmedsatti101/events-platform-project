@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
 const apiKey = process.env.REACT_APP_API_KEY;
 const authDomain = process.env.REACT_APP_AUTH_DOMAIN;
@@ -25,6 +26,10 @@ const app = initializeApp(config);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const functions = getFunctions();
+export const dbClient = new DynamoDBClient({ region: "eu-west-2", credentials: {
+    accessKeyId: "AKIAXYKJUWHQ2XVUEF2V",
+    secretAccessKey: "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" 
+}});
 
 if (location.hostname === "localhost") {
     connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });

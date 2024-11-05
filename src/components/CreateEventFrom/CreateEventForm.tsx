@@ -5,8 +5,9 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { parse, isDate } from "date-fns";
 import moment from "moment";
-import { db } from "../../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { v4 as uuidv4 } from "uuid";
+import { dbClient } from "../../firebase";
 
 const schema = yup
   .object({
@@ -86,14 +87,14 @@ try {
 type FormData = yup.InferType<typeof schema>;
 
 export default function CreateEventForm() {
-  const [title, setTitle] = useState<string>();
-  const [date, setDate] = useState<string>();
-  const [location, setLocation] = useState<string>();
-  const [description, setDescription] = useState<string>();
-  const [startTime, setStartTime] = useState<string>();
-  const [endTime, setEndTime] = useState<string>();
-  const [phoneNumber, setPhoneNumber] = useState<string>();
-  const [email, setEmail] = useState<string>();
+  const [title, setTitle] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [startTime, setStartTime] = useState<string>("");
+  const [endTime, setEndTime] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
 
   const {
     register,
@@ -103,27 +104,26 @@ export default function CreateEventForm() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = () => {
-    try {
-      addDoc(collection(db, "events"), {
-        title,
-        date,
-        location,
-        description,
-        startTime,
-        endTime,
-        phoneNumber,
-        email,
-      })
-        .then(() => {
-          alert("Event created");
-        })
-        .catch((err) => {
-          alert("Error creating event. Try again later.");
-        });
-    } catch (error) {
-      alert("Error creating event. Try again later.");
-    }
+  const onSubmit = async () => {
+    const input = {
+        "Item": {
+            "eventId": {"S": uuidv4()},
+            "title": {"S": title},
+            "date": {"S": date},
+            "location": {"S": location},
+            "description": {"S": description},
+            "startTime": {"S": startTime},
+            "endTime": {"S": endTime},
+            "phoneNumber": {"S": phoneNumber},
+            "email": {"S": email}
+        },
+        "TableName": "events"
+    };
+
+    const command = new PutItemCommand(input);
+    await dbClient.send(command)
+        .then(() => alert("Event created!"))
+        .catch((e) => console.log(e))
   };
 
   return (
