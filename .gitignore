@@ -3,12 +3,6 @@ node_modules
 .idea
 .vscode
 public/bundle.js
-# Local Netlify folder
 .netlify
 build
-firebase.json
-.firebaserc
-functions
-firebase-debug.log
-firestore-debug.log
 ui-debug.log

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import { CognitoIdentityProviderClient, SignUpCommand, UsernameExistsException } from "@aws-sdk/client-cognito-identity-provider";
 import "./SignUp.css";
 
 const schema = yup
@@ -15,19 +16,21 @@ const schema = yup
       .required("Email required"),
     password: yup
       .string()
-      .min(7, "Password must be at least 7 characters long")
+      .min(8, "Password must be at least 8 characters long")
+      .matches(/\d/, "Password must contain at least one number")
+      .matches(/[A-Z]/, "Password must contain at least 1 uppercase letter")
+      .matches(/[a-z]/, "Password must contain at least 1 lowercase letter")
+      .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least 1 special character (e.g., @, #, !)") 
       .required("Password required"),
   })
   .required();
 
-try {
-  schema.validateSync({
-    email: "test@email.com",
-    password: "testpass",
-  });
-} catch (error) {}
-
 type FormData = yup.InferType<typeof schema>;
+
+const client = new CognitoIdentityProviderClient({ region: "eu-west-2", credentials: {
+    accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID ? process.env.REACT_APP_ACCESS_KEY_ID : "",
+    secretAccessKey: process.env.REACT_APP_SECERT_ACCESS_KEY ? process.env.REACT_APP_SECERT_ACCESS_KEY : ""
+}});
 
 export default function SignUp() {
   const [email, setEmail] = useState<string>("");
@@ -40,8 +43,30 @@ export default function SignUp() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = () => {
-    
+  const onSubmit = async () => {
+    try {
+        const input = {
+            ClientId: process.env.REACT_APP_COGNITO_CLIENT_ID ? process.env.REACT_APP_COGNITO_CLIENT_ID : "",
+            Username: email,
+            Password: password
+        };
+
+        const command = new SignUpCommand(input);
+        await client.send(command)
+            .then((data) => {
+                if (data.$metadata.httpStatusCode == 200) {
+                    alert("Account created");
+                }
+            })
+    }
+    catch (e) {
+        if (e instanceof UsernameExistsException) {
+            alert("You already have an account")
+        }
+        else {
+            alert("Could not create account. Try again later");
+        } 
+    }
   };
 
   return (
@@ -79,6 +104,16 @@ export default function SignUp() {
             data-testid="input-password"
           />
           <p id="error-text">{errors.password?.message}</p>
+          
+          <p>Password requirements:</p>
+          <ul>
+            <li>Must be at least 8 characters long</li>
+            <li>Contains at least 1 number</li>
+            <li>Contains at least 1 special character</li>
+            <li>Contains at least 1 uppercase letter</li>
+            <li>Contains at least 1 lowercase letter</li>
+          </ul>
+
           <br />
 
           <button type="submit" id="sign-up-button">
