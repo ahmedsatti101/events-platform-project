@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { CognitoIdentityProviderClient, InitiateAuthCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { CognitoIdentityProviderClient, InitiateAuthCommand, UserNotFoundException, UserNotConfirmedException, NotAuthorizedException } from "@aws-sdk/client-cognito-identity-provider";
 import "./SignIn.css";
-
-type InitiateAuthCommandInput = "USER_PASSWORD_AUTH";
 
 const schema = yup
   .object({
@@ -20,14 +18,8 @@ const schema = yup
   })
   .required();
 
-try {
-  schema.validateSync({
-    email: "test@email.com",
-    password: "testpass",
-  });
-} catch (error) {}
-
 type FormData = yup.InferType<typeof schema>;
+type InitiateAuthCommandInput = "USER_PASSWORD_AUTH";
 
 const client = new CognitoIdentityProviderClient({ region: "eu-west-2", credentials: {
     accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID ? process.env.REACT_APP_ACCESS_KEY_ID : "",
@@ -58,10 +50,18 @@ export default function SignIn() {
         }; 
 
         const command = new InitiateAuthCommand(input);
-        const res = await client.send(command);
-        console.log(res);
+        
+        await client.send(command)
+            .then((data) => {
+                if (data.$metadata.httpStatusCode === 200) alert("You have signed in");
+            });
     }
-    catch (e) {console.log(e)}
+    catch (e) {
+        if (e instanceof UserNotConfirmedException) alert("You need to confirm your account before signing in, please check your email inbox or spam folder for the confirmation email");
+        else if (e instanceof UserNotFoundException) alert("It seems you do not have an account to be able to sign in. Make sure to sign up first.")
+        else if (e instanceof NotAuthorizedException) alert("Incorrect username or password");
+        else alert("Error signing in. Please try again later.");
+    }
   };
 
   return (

@@ -64,7 +64,8 @@ export default function SignUp() {
             alert("You already have an account")
         }
         else {
-            alert("Could not create account. Try again later");
+            console.log(e)
+            //alert("Could not create account. Try again later");
         } 
     }
   };
