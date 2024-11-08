@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { CognitoIdentityProviderClient, InitiateAuthCommand, UserNotFoundException, UserNotConfirmedException, NotAuthorizedException } from "@aws-sdk/client-cognito-identity-provider";
+import { CognitoIdentityProviderClient, InitiateAuthCommand, UserNotFoundException, UserNotConfirmedException, NotAuthorizedException, GetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { UserContext } from "../../context/UserContext";
 import "./SignIn.css";
 
 const schema = yup
@@ -29,6 +30,8 @@ const client = new CognitoIdentityProviderClient({ region: "eu-west-2", credenti
 export default function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const { loggedInUser ,setLoggedInUser } = useContext<any>(UserContext);
+  const [accessToken, setAccessToken] = useState<string>();
 
   const {
     register,
@@ -53,8 +56,23 @@ export default function SignIn() {
         
         await client.send(command)
             .then((data) => {
-                if (data.$metadata.httpStatusCode === 200) alert("You have signed in");
+                if (data.$metadata.httpStatusCode === 200) {
+                    setAccessToken(data.AuthenticationResult?.AccessToken);
+                    alert("You have signed in")
+                }
             });
+
+        if (accessToken) {
+            const getUser = new GetUserCommand({ AccessToken: accessToken });
+            await client.send(getUser)
+                .then((data) => {
+                    if (data.$metadata.httpStatusCode === 200) {
+                        window.sessionStorage.setItem("username", data.UserAttributes?.[0]?.Value ?? "");
+                        window.sessionStorage.setItem("accessToken", accessToken);
+                    }
+                })
+                .catch(e => console.log(e));
+            }
     }
     catch (e) {
         if (e instanceof UserNotConfirmedException) alert("You need to confirm your account before signing in, please check your email inbox or spam folder for the confirmation email");

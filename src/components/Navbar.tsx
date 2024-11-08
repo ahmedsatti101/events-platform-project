@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,22 +10,19 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import PedalBikeIcon from "@mui/icons-material/PedalBike";
-import { UserContext } from "../context/UserContext";
+import { CognitoIdentityProviderClient, GlobalSignOutCommand } from "@aws-sdk/client-cognito-identity-provider";
 
 const pages = ["Events", "Sign up", "Sign in"];
 const adminPages = ["Create event", "Add admin"];
 
 export default function ResponsiveAppBar() {
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  const { isAdmin } = useContext(UserContext);
-
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged((user) => {
-  //     setIsSignedIn(!!user);
-  //   });
-
-  //   return () => unsubscribe();
-  // }, []);
+  const user = window.sessionStorage.getItem("username");
+  const client = new CognitoIdentityProviderClient({ region: "eu-west-2", credentials: {
+    accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.REACT_APP_SECERT_ACCESS_KEY || ""
+  }});
+  const command = new GlobalSignOutCommand({ AccessToken: window.sessionStorage.getItem("accessToken") || "" });
+  const response = async () => await client.send(command);
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -101,7 +98,7 @@ export default function ResponsiveAppBar() {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
-              {isAdmin && adminPages.map((page) => (
+              {/*{isAdmin && adminPages.map((page) => (
               <MenuItem
                 key={page}
                 component="a"
@@ -110,7 +107,7 @@ export default function ResponsiveAppBar() {
               >
                 {page}
               </MenuItem>
-            ))}
+            ))}*/}
             </Menu>
           </Box>
           <PedalBikeIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -146,7 +143,7 @@ export default function ResponsiveAppBar() {
                 {page}
               </Button>
             ))}
-            {isAdmin && adminPages.map((page) => (
+            {/*{isAdmin && adminPages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -155,16 +152,19 @@ export default function ResponsiveAppBar() {
               >
                 {page}
               </Button>
-            ))}
+            ))}*/}
           </Box>
-          {/* <Box sx={{ flexGrow: 0 }}>
-            {isSignedIn === true && (
+           <Box sx={{ flexGrow: 0 }}>
+            {user && (
               <Button
                 onClick={() =>
-                  auth.signOut().then(() => {
-                    alert("You signed out");
-                    if (window.location.href.endsWith("/create-event") || window.location.href.endsWith("/add-admin")) {
-                      window.location.href = "/";
+                  response().then((data) => {
+                    if (data.$metadata.httpStatusCode === 200) {
+                        window.sessionStorage.clear();
+                        alert("You signed out");
+                        if (window.location.href.endsWith("/create-event") || window.location.href.endsWith("/add-admin")) {
+                            window.location.href = "/";
+                        }
                     }
                   })
                 }
@@ -173,7 +173,7 @@ export default function ResponsiveAppBar() {
                Sign out 
               </Button>
             )}
-          </Box> */}
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
