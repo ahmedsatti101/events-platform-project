@@ -7,7 +7,6 @@ import SignIn from "./components/SignIn/SignIn";
 import ViewAllEvents from "./components/Events/Events";
 import SingleEvent from "./components/SingleEvent/SingleEvent";
 import AddAdmin from "./components/AddAdmin/AddAdmin";
-import ConfirmAccount from "./components/ConfirmAccount";
 
 const App = () => {
   return (
@@ -20,7 +19,6 @@ const App = () => {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/events/:event_id" element={<SingleEvent />} />
         <Route path="/add-admin" element={<AddAdmin />} />
-        <Route path="/confirm" element={<ConfirmAccount />}/>
       </Routes>
     </>
   );

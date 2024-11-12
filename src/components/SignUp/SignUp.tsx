@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { CognitoIdentityProviderClient, SignUpCommand, UsernameExistsException } from "@aws-sdk/client-cognito-identity-provider";
+import { SignUpCommand, UsernameExistsException } from "@aws-sdk/client-cognito-identity-provider";
 import "./SignUp.css";
+import { cognitoClient } from "../../Aws";
 
 const schema = yup
   .object({
@@ -27,11 +28,6 @@ const schema = yup
 
 type FormData = yup.InferType<typeof schema>;
 
-const client = new CognitoIdentityProviderClient({ region: "eu-west-2", credentials: {
-    accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID ? process.env.REACT_APP_ACCESS_KEY_ID : "",
-    secretAccessKey: process.env.REACT_APP_SECERT_ACCESS_KEY ? process.env.REACT_APP_SECERT_ACCESS_KEY : ""
-}});
-
 export default function SignUp() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -52,7 +48,7 @@ export default function SignUp() {
         };
 
         const command = new SignUpCommand(input);
-        await client.send(command)
+        await cognitoClient.send(command)
             .then((data) => {
                 if (data.$metadata.httpStatusCode == 200) {
                     alert("Account created");
