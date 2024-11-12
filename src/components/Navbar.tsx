@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext, useEffect, useState} from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,32 +10,29 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import PedalBikeIcon from "@mui/icons-material/PedalBike";
-import { CognitoIdentityProviderClient, GlobalSignOutCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { UserContext } from "../context/UserContext";
+import SignOut from "./SignOut";
 
 const pages = ["Events", "Sign up", "Sign in"];
 const adminPages = ["Create event", "Add admin"];
 
 export default function ResponsiveAppBar() {
-  const user = window.sessionStorage.getItem("username");
-  const client = new CognitoIdentityProviderClient({ region: "eu-west-2", credentials: {
-    accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.REACT_APP_SECERT_ACCESS_KEY || ""
-  }});
-  const command = new GlobalSignOutCommand({ AccessToken: window.sessionStorage.getItem("accessToken") || "" });
-  const response = async () => await client.send(command);
-
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+  const { loggedInUser } = useContext<any>(UserContext);
+  const [isSignedIn, setIsSignedIn] = useState(false);
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(
     null
   );
-
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
+  useEffect(() => {
+    if (loggedInUser.username) setIsSignedIn(true);
+  }, [loggedInUser.username]);
+ 
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -155,23 +152,8 @@ export default function ResponsiveAppBar() {
             ))}*/}
           </Box>
            <Box sx={{ flexGrow: 0 }}>
-            {user && (
-              <Button
-                onClick={() =>
-                  response().then((data) => {
-                    if (data.$metadata.httpStatusCode === 200) {
-                        window.sessionStorage.clear();
-                        alert("You signed out");
-                        if (window.location.href.endsWith("/create-event") || window.location.href.endsWith("/add-admin")) {
-                            window.location.href = "/";
-                        }
-                    }
-                  })
-                }
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-               Sign out 
-              </Button>
+            {isSignedIn && (
+                <SignOut setIsSignedIn={setIsSignedIn}/>
             )}
           </Box>
         </Toolbar>

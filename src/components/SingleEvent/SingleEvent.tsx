@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import "./SingleEvent.css";
 import EventSignUp from "../EventSignUp";
 import AddToCalendar from "../AddToCalendar";
-import { dbClient } from "../../Dbclient";
+import { dbClient } from "../../Aws";
 import { GetItemCommand } from "@aws-sdk/client-dynamodb";
 
 export default function SingleEvent() {

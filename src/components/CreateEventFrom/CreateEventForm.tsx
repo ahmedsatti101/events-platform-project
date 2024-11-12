@@ -7,7 +7,7 @@ import { parse, isDate } from "date-fns";
 import moment from "moment";
 import { PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { v4 as uuidv4 } from "uuid";
-import { dbClient } from "../../Dbclient";
+import { dbClient } from "../../Aws";
 
 const schema = yup
   .object({

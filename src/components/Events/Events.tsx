@@ -11,7 +11,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import Grid from "@mui/material/Grid";
 import "./Events.css";
 import { ScanCommand } from "@aws-sdk/client-dynamodb";
-import { dbClient } from "../../Dbclient";
+import { dbClient } from "../../Aws";
 
 export default function ViewAllEvents() {
   const [events, setEvents] = useState<any[]>();

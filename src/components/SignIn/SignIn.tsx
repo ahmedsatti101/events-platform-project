@@ -2,9 +2,10 @@ import React, { useContext, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
-import { CognitoIdentityProviderClient, InitiateAuthCommand, UserNotFoundException, UserNotConfirmedException, NotAuthorizedException, GetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { InitiateAuthCommand, UserNotFoundException, UserNotConfirmedException, NotAuthorizedException, GetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
 import { UserContext } from "../../context/UserContext";
 import "./SignIn.css";
+import { cognitoClient } from "../../Aws";
 
 const schema = yup
   .object({
@@ -22,16 +23,10 @@ const schema = yup
 type FormData = yup.InferType<typeof schema>;
 type InitiateAuthCommandInput = "USER_PASSWORD_AUTH";
 
-const client = new CognitoIdentityProviderClient({ region: "eu-west-2", credentials: {
-    accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID ? process.env.REACT_APP_ACCESS_KEY_ID : "",
-    secretAccessKey: process.env.REACT_APP_SECERT_ACCESS_KEY ? process.env.REACT_APP_SECERT_ACCESS_KEY : ""
-}});
-
 export default function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const { loggedInUser ,setLoggedInUser } = useContext<any>(UserContext);
-  const [accessToken, setAccessToken] = useState<string>();
+  const { setLoggedInUser } = useContext<any>(UserContext);
 
   const {
     register,
@@ -53,22 +48,23 @@ export default function SignIn() {
         }; 
 
         const command = new InitiateAuthCommand(input);
+        let accessToken: string | undefined;
         
-        await client.send(command)
+        await cognitoClient.send(command)
             .then((data) => {
                 if (data.$metadata.httpStatusCode === 200) {
-                    setAccessToken(data.AuthenticationResult?.AccessToken);
-                    alert("You have signed in")
+                    accessToken = data.AuthenticationResult?.AccessToken;
+                    console.log("You have signed in")
                 }
             });
 
         if (accessToken) {
             const getUser = new GetUserCommand({ AccessToken: accessToken });
-            await client.send(getUser)
+            await cognitoClient.send(getUser)
                 .then((data) => {
                     if (data.$metadata.httpStatusCode === 200) {
-                        window.sessionStorage.setItem("username", data.UserAttributes?.[0]?.Value ?? "");
-                        window.sessionStorage.setItem("accessToken", accessToken);
+                        setLoggedInUser({ accessToken: accessToken, username: data.UserAttributes ? data.UserAttributes[0].Value : "" });
+                        window.sessionStorage.setItem("accessToken", accessToken ?? "");
                     }
                 })
                 .catch(e => console.log(e));
