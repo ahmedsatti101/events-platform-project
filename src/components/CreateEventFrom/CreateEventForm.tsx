@@ -115,6 +115,7 @@ export default function CreateEventForm() {
         endTime: { S: endTime },
         phoneNumber: { S: phoneNumber },
         email: { S: email },
+        attendees: { L: [] }
       },
       TableName: "events",
     };
