@@ -3,6 +3,8 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "./AddAdmin.css";
+import { AdminUpdateUserAttributesCommand, UserNotFoundException } from "@aws-sdk/client-cognito-identity-provider";
+import { cognitoClient } from "../../Aws";
 
 const schema = yup
   .object({
@@ -29,8 +31,20 @@ export default function AddAdmin() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    const command = new AdminUpdateUserAttributesCommand({Username: email, UserPoolId: process.env.REACT_APP_USER_POOL_ID || "", UserAttributes: [
+        {
+            Name: "custom:admin",
+            Value: "true"
+        }
+    ]});
     
+    await cognitoClient.send(command)
+        .then(data => {if (data.$metadata.httpStatusCode === 200) console.log("User has been made an admin")})
+        .catch(e => {
+            if (e instanceof UserNotFoundException) console.log("User not found")
+            else console.log("Something went wrong. Try again later")
+        })
   };
 
   return (
