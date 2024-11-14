@@ -7,12 +7,14 @@ export default function UserProvider({ children }: {
 }) {
   const [loggedInUser, setLoggedInUser] = useState({
     username: "",
-    accessToken: ""
+    accessToken: "",
+    admin: ""
   });
 
   useEffect(() => {
     if (loggedInUser.username) {
         window.sessionStorage.setItem("username", loggedInUser.username);
+        window.sessionStorage.setItem("admin", loggedInUser.admin !== "true" ? "false" : "true")
     }
   }, [loggedInUser.username]);
 

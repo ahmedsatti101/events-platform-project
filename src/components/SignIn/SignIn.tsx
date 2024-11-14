@@ -63,7 +63,7 @@ export default function SignIn() {
             await cognitoClient.send(getUser)
                 .then((data) => {
                     if (data.$metadata.httpStatusCode === 200) {
-                        setLoggedInUser({ accessToken: accessToken, username: data.UserAttributes ? data.UserAttributes[0].Value : "" });
+                        setLoggedInUser({ accessToken: accessToken, username: data.UserAttributes ? data.UserAttributes[0].Value : "", admin: data.UserAttributes ? data.UserAttributes[2].Value : "false" });
                         window.sessionStorage.setItem("accessToken", accessToken ?? "");
                     }
                 })

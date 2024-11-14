@@ -23,7 +23,8 @@ export default function SignOut({ setIsSignedIn }: any) {
             setIsSignedIn(false);
             setLoggedInUser({
                 username: "",
-                accessToken: ""
+                accessToken: "",
+                admin: ""
             });
             window.sessionStorage.clear();
             console.log("You signed out");

@@ -10,14 +10,14 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import PedalBikeIcon from "@mui/icons-material/PedalBike";
-import { UserContext } from "../context/UserContext";
 import SignOut from "./SignOut";
 
 const pages = ["Events", "Sign up", "Sign in"];
 const adminPages = ["Create event", "Add admin"];
 
 export default function ResponsiveAppBar() {
-  const { loggedInUser } = useContext<any>(UserContext);
+  const user = window.sessionStorage.getItem("username");
+  const admin = window.sessionStorage.getItem("admin");
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(
     null
@@ -30,8 +30,8 @@ export default function ResponsiveAppBar() {
   };
 
   useEffect(() => {
-    if (loggedInUser.username) setIsSignedIn(true);
-  }, [loggedInUser.username]);
+    if (user) setIsSignedIn(true);
+  }, [user]);
  
   return (
     <AppBar position="static">
@@ -95,7 +95,7 @@ export default function ResponsiveAppBar() {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
-              {/*{isAdmin && adminPages.map((page) => (
+              {admin === "true" && adminPages.map((page) => (
               <MenuItem
                 key={page}
                 component="a"
@@ -104,7 +104,7 @@ export default function ResponsiveAppBar() {
               >
                 {page}
               </MenuItem>
-            ))}*/}
+            ))}
             </Menu>
           </Box>
           <PedalBikeIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -140,7 +140,7 @@ export default function ResponsiveAppBar() {
                 {page}
               </Button>
             ))}
-            {/*{isAdmin && adminPages.map((page) => (
+            {admin === "true" && adminPages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -149,7 +149,7 @@ export default function ResponsiveAppBar() {
               >
                 {page}
               </Button>
-            ))}*/}
+            ))}
           </Box>
            <Box sx={{ flexGrow: 0 }}>
             {isSignedIn && (
