@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,6 +11,7 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import PedalBikeIcon from "@mui/icons-material/PedalBike";
 import SignOut from "./SignOut";
+import DialogComponent from "./Dialog";
 
 const pages = ["Events", "Sign up", "Sign in"];
 const adminPages = ["Create event", "Add admin"];
@@ -19,6 +20,8 @@ export default function ResponsiveAppBar() {
   const user = window.sessionStorage.getItem("username");
   const admin = window.sessionStorage.getItem("admin");
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
+  const closeDialog = () => setShowDialog(false);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(
     null
   );
@@ -27,6 +30,11 @@ export default function ResponsiveAppBar() {
   };
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleSignOut = () => {
+    setIsSignedIn(false);
+    setShowDialog(true);
   };
 
   useEffect(() => {
@@ -153,11 +161,16 @@ export default function ResponsiveAppBar() {
           </Box>
            <Box sx={{ flexGrow: 0 }}>
             {isSignedIn && (
-                <SignOut setIsSignedIn={setIsSignedIn}/>
+                <SignOut onSignOut={handleSignOut}/>
             )}
           </Box>
         </Toolbar>
       </Container>
+     <DialogComponent
+        open={showDialog}
+        title="Signed out"
+        content="You signed out of your account"
+        close={closeDialog}/>
     </AppBar>
   );
 }

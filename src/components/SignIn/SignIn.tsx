@@ -6,6 +6,7 @@ import { InitiateAuthCommand, UserNotFoundException, UserNotConfirmedException, 
 import { UserContext } from "../../context/UserContext";
 import "./SignIn.css";
 import { cognitoClient } from "../../Aws";
+import DialogComponent from "../Dialog";
 
 const schema = yup
   .object({
@@ -27,6 +28,10 @@ export default function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setLoggedInUser } = useContext<any>(UserContext);
+  const [showDialog, setShowDialog] = useState(false);
+  const closeDialog = () => setShowDialog(false);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const {
     register,
@@ -54,7 +59,9 @@ export default function SignIn() {
             .then((data) => {
                 if (data.$metadata.httpStatusCode === 200) {
                     accessToken = data.AuthenticationResult?.AccessToken;
-                    console.log("You have signed in")
+                    setTitle("Success");
+                    setContent("You have signed into your account.");
+                    setShowDialog(true);
                 }
             });
 
@@ -67,14 +74,34 @@ export default function SignIn() {
                         window.sessionStorage.setItem("accessToken", accessToken ?? "");
                     }
                 })
-                .catch(e => console.log(e));
+                .catch(() => {
+                    setTitle("Error");
+                    setContent("Something went wrong. Please try again later.")
+                    setShowDialog(true);
+                });
             }
     }
     catch (e) {
-        if (e instanceof UserNotConfirmedException) alert("You need to confirm your account before signing in, please check your email inbox or spam folder for the confirmation email");
-        else if (e instanceof UserNotFoundException) alert("It seems you do not have an account to be able to sign in. Make sure to sign up first.")
-        else if (e instanceof NotAuthorizedException) alert("Incorrect username or password");
-        else alert("Error signing in. Please try again later.");
+        if (e instanceof UserNotConfirmedException) {
+            setTitle("Account not confirmed");
+            setContent("You need to confirm your account before signing in, please check your email inbox or spam folder for the confirmation email");
+            setShowDialog(true);
+        }
+        else if (e instanceof UserNotFoundException) {
+            setTitle("Account not found");
+            setContent("It seems you do not have an account to be able to sign in. Make sure to sign up first.");
+            setShowDialog(true);
+        }
+        else if (e instanceof NotAuthorizedException) {
+            setTitle("Error");
+            setContent("Incorrect username or password");
+            setShowDialog(true);
+        }
+        else {
+            setTitle("Server Error");
+            setContent("Something went wrong. Please try again later.");
+            setShowDialog(true);
+        }
     }
   };
 
@@ -119,6 +146,7 @@ export default function SignIn() {
           </button>
         </form>
       </section>
+      <DialogComponent open={showDialog} title={title} content={content} close={closeDialog}/>
     </>
   );
 }

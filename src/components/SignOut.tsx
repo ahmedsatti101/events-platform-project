@@ -1,33 +1,28 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { GlobalSignOutCommand } from "@aws-sdk/client-cognito-identity-provider";
 import Button from "@mui/material/Button";
 import { cognitoClient } from "../Aws";
+import DialogComponent from "./Dialog";
 
-export default function SignOut({ setIsSignedIn }: any) {
+export default function SignOut({ onSignOut }: {onSignOut: () => void}) {
   const { setLoggedInUser } = useContext<any>(UserContext);
-  const [showModal, setShowModal] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
   const command = new GlobalSignOutCommand({ AccessToken: window.sessionStorage.getItem("accessToken") || "" });
   const response = async () => await cognitoClient.send(command);
-
-
-  useEffect(() => {
-    if (showModal) {
-      setShowModal(false);
-    }
-  }, []);
-
+  const closeDialog = () => setShowDialog(false);
+ 
   const handleSignOut = () => {
     response().then((data) => {
         if (data.$metadata.httpStatusCode === 200) {
-            setIsSignedIn(false);
+            setShowDialog(true);
+            onSignOut();
             setLoggedInUser({
                 username: "",
                 accessToken: "",
                 admin: ""
             });
             window.sessionStorage.clear();
-            console.log("You signed out");
            if (window.location.href.endsWith("/create-event") || window.location.href.endsWith("/add-admin")) {
              window.location.href = "/";
             }
@@ -39,13 +34,7 @@ export default function SignOut({ setIsSignedIn }: any) {
   return (
     <>
       <Button onClick={handleSignOut} sx={{ my: 2, color: "white", display: "block" }}>Sign out</Button>
-      {/*<Modal show={showModal}>
-        <Modal.Header>Signed out</Modal.Header>
-        <Modal.Body>You've signed out! Refresh to see changes.</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>OK</Button>
-        </Modal.Footer>
-      </Modal>*/}
+      <DialogComponent open={showDialog} title="Signed out" content="You signed out of your account" close={closeDialog}/>
     </>
   );
 }

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { SignUpCommand, UsernameExistsException } from "@aws-sdk/client-cognito-identity-provider";
 import "./SignUp.css";
 import { cognitoClient } from "../../Aws";
+import DialogComponent from "../Dialog";
 
 const schema = yup
   .object({
@@ -31,6 +32,10 @@ type FormData = yup.InferType<typeof schema>;
 export default function SignUp() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showDialog, setShowDialog] = useState(false);
+  const closeDialog = () => setShowDialog(false);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const {
     register,
     handleSubmit,
@@ -51,17 +56,22 @@ export default function SignUp() {
         await cognitoClient.send(command)
             .then((data) => {
                 if (data.$metadata.httpStatusCode == 200) {
-                    alert("Account created");
+                    setTitle("Success");
+                    setContent("Your account has been created. Check your email inbox or spam folder for verification email.");
+                    setShowDialog(true);
                 }
             })
     }
     catch (e) {
         if (e instanceof UsernameExistsException) {
-            alert("You already have an account")
+            setTitle("Error");
+            setContent("An account exists with this email. Please try a different email address or log into your account.")
+            setShowDialog(true);
         }
         else {
-            console.log(e)
-            //alert("Could not create account. Try again later");
+            setTitle("Server error");
+            setContent("Something went wrong. Please try again later.");
+            setShowDialog(true);
         } 
     }
   };
@@ -121,6 +131,7 @@ export default function SignUp() {
           </p>
         </form>
       </section>
+      <DialogComponent open={showDialog} title={title} content={content} close={closeDialog}/>
     </>
   );
 }

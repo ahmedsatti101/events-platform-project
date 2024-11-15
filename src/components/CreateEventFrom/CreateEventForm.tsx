@@ -8,6 +8,7 @@ import moment from "moment";
 import { PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 import { dbClient } from "../../Aws";
+import DialogComponent from "../Dialog";
 
 const schema = yup
   .object({
@@ -94,6 +95,11 @@ export default function CreateEventForm() {
   const [endTime, setEndTime] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [dialogTitle, setDialogTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [showDialog, setShowDialog] = useState(false);
+  const closeDialog = () => setShowDialog(false);
+
 
   const {
     register,
@@ -123,8 +129,16 @@ export default function CreateEventForm() {
     const command = new PutItemCommand(input);
     await dbClient
       .send(command)
-      .then(() => alert("Event created!"))
-      .catch((e) => console.log(e));
+      .then(() => {
+        setDialogTitle("Success");
+        setContent("Event created successfully.")
+        setShowDialog(true);
+      })
+      .catch(() => {
+        setDialogTitle("Error");
+        setContent("Something went wrong. Please try again later.")
+        setShowDialog(true);
+      });
   };
 
   return (
@@ -245,6 +259,7 @@ export default function CreateEventForm() {
           </footer>
         </form>
       </section>
+      <DialogComponent open={showDialog} title={dialogTitle} content={content} close={closeDialog}/>
     </>
   );
 }

@@ -1,8 +1,15 @@
 import { dbClient } from "../Aws";
 import { ConditionalCheckFailedException, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import DialogComponent from "./Dialog";
+import React, { useState } from "react";
 
 export default function EventSignUp(event_id: string) {
     const user = window.sessionStorage.getItem("username");
+    const [showDialog, setShowDialog] = useState(false);
+    const closeDialog = () => setShowDialog(false);
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const element = React.createElement(DialogComponent);
     
     const userIsAttending = async () => {
         if (!user) return;
@@ -30,7 +37,7 @@ export default function EventSignUp(event_id: string) {
         await dbClient.send(command);
     };
 
-    if (!user) {
+    if (!user) { 
         alert("Please create an account or sign into your account before signing up for this event");
     } else {
         userIsAttending()

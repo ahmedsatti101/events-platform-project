@@ -5,10 +5,13 @@ import EventSignUp from "../EventSignUp";
 import AddToCalendar from "../AddToCalendar";
 import { dbClient } from "../../Aws";
 import { GetItemCommand } from "@aws-sdk/client-dynamodb";
+import DialogComponent from "../Dialog";
 
 export default function SingleEvent() {
   const { event_id } = useParams();
   const [event, setEvent] = useState<any[]>();
+  const [showDialog, setShowDialog] = useState(true);
+  const closeDialog = () => setShowDialog(false);
 
   useEffect(() => {
     if (event_id) {
@@ -86,7 +89,7 @@ export default function SingleEvent() {
               onClick={() => {
                 event_id
                   ? EventSignUp(event_id)
-                  : alert("Something went wrong");
+                  : <DialogComponent open={showDialog} title="Error" content="Error signing up for event. Please try again later." close={closeDialog}/>;
               }}
             >
               Sign up
