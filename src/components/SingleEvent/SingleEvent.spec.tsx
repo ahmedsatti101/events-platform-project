@@ -3,6 +3,7 @@ import SingleEvent from "./SingleEvent";
 import { render, screen, waitFor } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
+import {Dialog} from "@mui/material";
 
 describe("SingleEvent component", () => {
   beforeEach(async () => {
@@ -16,7 +17,7 @@ describe("SingleEvent component", () => {
     ];
 
     const router = createMemoryRouter(routes, {
-      initialEntries: ["/events/5KNyPdCnaTB1bP8wunvi"],
+      initialEntries: ["/events/011528d2-ea9e-41a6-95a4-10051b304432"],
       initialIndex: 0,
     });
 
@@ -43,19 +44,15 @@ describe("SingleEvent component", () => {
       );
     });
 
-    it("Clicking the sign up will trigger a popup", async () => {
-      const alertMock = jest.spyOn(window, "confirm").mockImplementation();
-      const user = userEvent.setup();
+    it("Clicking the sign up button will show a dialog", async () => {
+        const user = userEvent.setup();
+        const button = await waitFor(() => screen.getByRole("button", { name: /Sign up/i }));
 
-      const button = await waitFor(() =>
-        screen.getByRole("button", { name: /Sign up/i })
-      );
+        await user.click(button);
 
-      await user.click(button);
+        screen.debug();
 
-      expect(alertMock).toHaveBeenCalledTimes(1);
-
-      alertMock.mockRestore();
+        expect(button).not.toBeInTheDocument();
     });
   });
 

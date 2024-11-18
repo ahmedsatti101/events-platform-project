@@ -22,7 +22,7 @@ describe("SignUp component", () => {
     expect(screen.getByText("Invalid email address")).toBeInTheDocument();
 
     expect(
-      screen.getByText("Password must be at least 7 characters long")
+      screen.getByText("Password must be at least 8 characters long")
     ).toBeInTheDocument();
   });
 
@@ -71,7 +71,7 @@ describe("SignUp component", () => {
   });
   
   describe("Password input validation", () => {
-    it("Password must be at least 7 characters long", async () => {
+    it("Password must be at least 8 characters long", async () => {
       const user = userEvent.setup();
       const input = screen.getByTestId("input-password");
 
@@ -81,7 +81,7 @@ describe("SignUp component", () => {
 
       await user.click(saveForm);
 
-      const element = screen.queryByText("Password must be at least 7 characters long");
+      const element = screen.queryByText("Password must be at least 8 characters long");
 
       expect(element).toBeInTheDocument();
     });
@@ -96,7 +96,7 @@ describe("SignUp component", () => {
 
       await user.click(saveForm);
 
-      const element = screen.queryByText("Password must be at least 7 characters long");
+      const element = screen.queryByText("Password must be at least 8 characters long");
 
       expect(element).not.toBeInTheDocument();
     });
