@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
+import React, { useContext, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import { InitiateAuthCommand, UserNotFoundException, UserNotConfirmedException, NotAuthorizedException, GetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
+import { UserContext } from "../../context/UserContext";
 import "./SignIn.css";
+import { cognitoClient } from "../../Aws";
+import DialogComponent from "../Dialog";
 
 const schema = yup
   .object({
@@ -19,20 +21,17 @@ const schema = yup
   })
   .required();
 
-try {
-  schema.validateSync({
-    email: "test@email.com",
-    password: "testpass",
-  });
-} catch (error) {
-  
-}
-
 type FormData = yup.InferType<typeof schema>;
+type InitiateAuthCommandInput = "USER_PASSWORD_AUTH";
 
 export default function SignIn() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const { setLoggedInUser } = useContext<any>(UserContext);
+  const [showDialog, setShowDialog] = useState(false);
+  const closeDialog = () => setShowDialog(false);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const {
     register,
@@ -42,18 +41,68 @@ export default function SignIn() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((creds) => {
-        alert("Logged in as: " + creds.user.email);
-      })
-      .catch((err) => {
-        if (err.code === "auth/invalid-credential") {
-          alert("Incorrect email or password");
-        } else {
-          alert("Could not sign you in. Try again later.")
+  const onSubmit = async () => {
+    try {
+        const input = {
+          "AuthFlow": "USER_PASSWORD_AUTH" as InitiateAuthCommandInput,
+          "AuthParameters": {
+            "PASSWORD": password,
+            "USERNAME": email
+          },
+          "ClientId": process.env.REACT_APP_COGNITO_CLIENT_ID ? process.env.REACT_APP_COGNITO_CLIENT_ID : ""
+        }; 
+
+        const command = new InitiateAuthCommand(input);
+        let accessToken: string | undefined;
+        
+        await cognitoClient.send(command)
+            .then((data) => {
+                if (data.$metadata.httpStatusCode === 200) {
+                    accessToken = data.AuthenticationResult?.AccessToken;
+                    setTitle("Success");
+                    setContent("You have signed into your account.");
+                    setShowDialog(true);
+                }
+            });
+
+        if (accessToken) {
+            const getUser = new GetUserCommand({ AccessToken: accessToken });
+            await cognitoClient.send(getUser)
+                .then((data) => {
+                    if (data.$metadata.httpStatusCode === 200) {
+                        setLoggedInUser({ accessToken: accessToken, username: data.UserAttributes ? data.UserAttributes[0].Value : "", admin: data.UserAttributes ? data.UserAttributes[2].Value : "false" });
+                        window.sessionStorage.setItem("accessToken", accessToken ?? "");
+                    }
+                })
+                .catch(() => {
+                    setTitle("Error");
+                    setContent("Something went wrong. Please try again later.")
+                    setShowDialog(true);
+                });
+            }
+    }
+    catch (e) {
+        if (e instanceof UserNotConfirmedException) {
+            setTitle("Account not confirmed");
+            setContent("You need to confirm your account before signing in, please check your email inbox or spam folder for the confirmation email");
+            setShowDialog(true);
         }
-      });
+        else if (e instanceof UserNotFoundException) {
+            setTitle("Account not found");
+            setContent("It seems you do not have an account to be able to sign in. Make sure to sign up first.");
+            setShowDialog(true);
+        }
+        else if (e instanceof NotAuthorizedException) {
+            setTitle("Error");
+            setContent("Incorrect username or password");
+            setShowDialog(true);
+        }
+        else {
+            setTitle("Server Error");
+            setContent("Something went wrong. Please try again later.");
+            setShowDialog(true);
+        }
+    }
   };
 
   return (
@@ -92,9 +141,12 @@ export default function SignIn() {
           <p id="error-text">{errors.password?.message}</p>
           <br />
 
-          <button type="submit" id="sign-in-button">Sign in</button>
+          <button type="submit" id="sign-in-button">
+            Sign in
+          </button>
         </form>
       </section>
+      <DialogComponent open={showDialog} title={title} content={content} close={closeDialog}/>
     </>
   );
 }

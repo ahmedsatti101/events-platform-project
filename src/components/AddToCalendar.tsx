@@ -1,6 +1,5 @@
 import React from "react";
 import { google, CalendarEvent } from "calendar-link";
-import EventIcon from '@mui/icons-material/Event';
 
 type Props = {
     description: string,

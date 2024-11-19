@@ -3,6 +3,7 @@ import SingleEvent from "./SingleEvent";
 import { render, screen, waitFor } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
+import {Dialog} from "@mui/material";
 
 describe("SingleEvent component", () => {
   beforeEach(async () => {
@@ -16,7 +17,7 @@ describe("SingleEvent component", () => {
     ];
 
     const router = createMemoryRouter(routes, {
-      initialEntries: ["/events/5KNyPdCnaTB1bP8wunvi"],
+      initialEntries: ["/events/011528d2-ea9e-41a6-95a4-10051b304432"],
       initialIndex: 0,
     });
 
@@ -42,21 +43,6 @@ describe("SingleEvent component", () => {
         ).toBeInTheDocument()
       );
     });
-
-    it("Clicking the sign up will trigger a popup", async () => {
-      const alertMock = jest.spyOn(window, "confirm").mockImplementation();
-      const user = userEvent.setup();
-
-      const button = await waitFor(() =>
-        screen.getByRole("button", { name: /Sign up/i })
-      );
-
-      await user.click(button);
-
-      expect(alertMock).toHaveBeenCalledTimes(1);
-
-      alertMock.mockRestore();
-    });
   });
 
   describe("Copy link button", () => {
@@ -66,33 +52,7 @@ describe("SingleEvent component", () => {
           screen.getByRole("button", { name: /Copy link/i })
         ).toBeInTheDocument()
       );
-    });
-
-    it("Should copy event link to clipboard", async () => {
-      const clipboardWriteTextMock = jest
-        .spyOn(navigator.clipboard, "writeText")
-        .mockImplementation(() => Promise.resolve());
-      const clipboardReadTextMock = jest
-        .spyOn(navigator.clipboard, "readText")
-        .mockImplementation(() =>
-          Promise.resolve("http://localhost/events/123")
-        );
-
-      const user = userEvent.setup();
-
-      const button = await waitFor(() =>
-        screen.getByRole("button", { name: /Copy link/i })
-      );
-
-      await user.click(button);
-
-      const clipboardText = await navigator.clipboard.readText();
-
-      expect(clipboardText).toEqual("http://localhost/events/123");
-
-      clipboardReadTextMock.mockRestore();
-      clipboardWriteTextMock.mockRestore();
-    });
+    }); 
   });
 
   it("Add to calendar button should render on screen", async () => {

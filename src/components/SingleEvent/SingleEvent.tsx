@@ -1,29 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { getDoc, doc } from "firebase/firestore";
-import { db } from "../../firebase";
 import { useParams } from "react-router-dom";
 import "./SingleEvent.css";
 import EventSignUp from "../EventSignUp";
 import AddToCalendar from "../AddToCalendar";
+import { dbClient } from "../../Aws";
+import { GetItemCommand } from "@aws-sdk/client-dynamodb";
+import DialogComponent from "../Dialog";
 
 export default function SingleEvent() {
   const { event_id } = useParams();
-  const [event, setEvent] = useState<any[]>([]);
+  const [event, setEvent] = useState<any[]>();
+  const [showDialog, setShowDialog] = useState(true);
+  const closeDialog = () => setShowDialog(false);
 
   useEffect(() => {
     if (event_id) {
       const fetchData = async () => {
-        try {
-          const docRef = doc(db, "events", event_id);
-          const result = await getDoc(docRef);
-          const data: any[] = [];
+        const input = {
+          Key: {
+            eventId: {
+              S: event_id,
+            },
+          },
+          TableName: "events",
+        };
+        const command = new GetItemCommand(input);
+        const res = await dbClient.send(command);
+        const data = [];
 
-          data.push({ ...result.data(), id: result.id });
+        data.push(res.Item);
 
-          setEvent(data);
-        } catch (error) {
-          alert("Could not display this event.");
-        }
+        setEvent(data);
       };
 
       fetchData();
@@ -51,36 +58,38 @@ export default function SingleEvent() {
 
   return (
     <>
-      {event.map((e) => {
+      {event?.map((e) => {
         return (
           <>
             <AddToCalendar
-              description={e.description}
-              location={e.location}
-              title={e.title}
-              start={e.startTime}
-              end={e.endTime}
-              date={e.date}
+              description={e.description.S}
+              location={e.location.S}
+              title={e.title.S}
+              start={e.startTime.S}
+              end={e.endTime.S}
+              date={e.date.S}
             />
             <br />
             <br />
-            <h1>{e.title}</h1>
+            <h1>{e.title.S}</h1>
             <h2>Description</h2>
-            <article id="event-description">{e.description}</article>
+            <article id="event-description">{e.description.S}</article>
 
             <h3>Date</h3>
-            <p>{e.date}</p>
+            <p>{e.date.S}</p>
 
             <h3>Time</h3>
-            <p>{`${e.startTime} - ${e.endTime}`}</p>
+            <p>{`${e.startTime.S} - ${e.endTime.S}`}</p>
 
             <h3>Where</h3>
-            <p>{e.location}</p>
+            <p>{e.location.S}</p>
 
             <button
               id="sign-up-button"
               onClick={() => {
-                event_id ? EventSignUp(event_id) : alert("Something went wrong");
+                event_id
+                  ? EventSignUp(event_id)
+                  : <DialogComponent open={showDialog} title="Error" content="Error signing up for event. Please try again later." close={closeDialog}/>;
               }}
             >
               Sign up
@@ -100,8 +109,8 @@ export default function SingleEvent() {
             </div>
 
             <p>
-              For queries or issues you can send a message to {e.email} or phone{" "}
-              {e.phoneNumber}
+              For queries or issues you can send a message to {e.email.S} or
+              phone {e.phoneNumber.S}
             </p>
           </>
         );

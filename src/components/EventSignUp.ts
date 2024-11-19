@@ -1,46 +1,48 @@
-import { arrayUnion, doc, updateDoc, getDoc } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { dbClient } from "../Aws";
+import { ConditionalCheckFailedException, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
 
 export default function EventSignUp(event_id: string) {
-  const docRef = doc(db, "events", event_id);
+    const user = window.sessionStorage.getItem("username");
+        
+    const userIsAttending = async () => {
+        if (!user) return;
 
-  auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      try {
-        const docSnap = await getDoc(docRef);
+        const command = new UpdateItemCommand({
+            Key: {
+                eventId: {
+                    S: event_id
+                }
+            },
+            TableName: "events",
+            ExpressionAttributeNames: {
+                "#att": "attendees"
+            },
+            ExpressionAttributeValues: {
+                ":ats": {
+                    L: [ {S: user} ]
+                },
+                ":empty_list": {L: []},
+                ":user": {S: user}
+            },
+            UpdateExpression: "SET #att = list_append(if_not_exists(#att, :empty_list), :ats)",
+            ConditionExpression: "not contains(#att, :user)",
+        });
+        await dbClient.send(command);
+    };
 
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          const attendees = data.attendes || [];
-
-          if (attendees.includes(user.email)) {
-            alert("You've already signed up for this event.");
-          } else {
-            if (
-              window.confirm(
-                `Do you wish to sign up for this event as ${user.email}?`
-              )
-            ) {
-              alert("Thank you for signing up!");
-              await updateDoc(docRef, {
-                attendes: arrayUnion(user.email),
-              }).catch(() => {
-                alert("Error signin up. Try again later.");
-              });
-            }
-          }
-        }
-      } catch {
-        alert("Something went wrong :(");
-      }
+    if (!user) { 
+        alert("Please create an account or sign into your account before signing up for this event");
     } else {
-      if (
-        window.confirm(
-          "You are not signed in, do you wish to create an account?"
-        )
-      ) {
-        window.location.href = "/sign-up";
-      }
+        userIsAttending()
+             .then(() => {
+                if (window.confirm(`Do you wish to sign up for this event as ${user}?`)) {
+                    alert("Thank you for signing up");
+                }
+             })
+             .catch(e => {
+                 if (e instanceof ConditionalCheckFailedException) alert("You've already signed up for this event.");
+                 else console.log(e);
+             })
     }
-  });
-}
+};
+

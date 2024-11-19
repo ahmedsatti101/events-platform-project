@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {useEffect, useState} from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,36 +10,37 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import PedalBikeIcon from "@mui/icons-material/PedalBike";
-import { auth } from "../firebase";
-import { UserContext } from "../context/UserContext";
+import SignOut from "./SignOut";
+import DialogComponent from "./Dialog";
 
 const pages = ["Events", "Sign up", "Sign in"];
 const adminPages = ["Create event", "Add admin"];
 
 export default function ResponsiveAppBar() {
+  const user = window.sessionStorage.getItem("username");
+  const admin = window.sessionStorage.getItem("admin");
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const { isAdmin } = useContext(UserContext);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsSignedIn(!!user);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
+  const [showDialog, setShowDialog] = useState(false);
+  const closeDialog = () => setShowDialog(false);
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(
     null
   );
-
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
+  const handleSignOut = () => {
+    setIsSignedIn(false);
+    setShowDialog(true);
+  };
+
+  useEffect(() => {
+    if (user) setIsSignedIn(true);
+  }, [user]);
+ 
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -102,7 +103,7 @@ export default function ResponsiveAppBar() {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
-              {isAdmin && adminPages.map((page) => (
+              {admin === "true" && adminPages.map((page) => (
               <MenuItem
                 key={page}
                 component="a"
@@ -147,7 +148,7 @@ export default function ResponsiveAppBar() {
                 {page}
               </Button>
             ))}
-            {isAdmin && adminPages.map((page) => (
+            {admin === "true" && adminPages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -158,25 +159,18 @@ export default function ResponsiveAppBar() {
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            {isSignedIn === true && (
-              <Button
-                onClick={() =>
-                  auth.signOut().then(() => {
-                    alert("You signed out");
-                    if (window.location.href.endsWith("/create-event") || window.location.href.endsWith("/add-admin")) {
-                      window.location.href = "/";
-                    }
-                  })
-                }
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-               Sign out 
-              </Button>
+           <Box sx={{ flexGrow: 0 }}>
+            {isSignedIn && (
+                <SignOut onSignOut={handleSignOut}/>
             )}
           </Box>
         </Toolbar>
       </Container>
+     <DialogComponent
+        open={showDialog}
+        title="Signed out"
+        content="You signed out of your account"
+        close={closeDialog}/>
     </AppBar>
   );
 }

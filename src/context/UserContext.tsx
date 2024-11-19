@@ -1,40 +1,25 @@
-import React, { createContext, useState, useEffect } from "react";
-import { auth } from "../firebase";
+import React, { createContext, useEffect, useState } from "react";
 
-export const UserContext = createContext({
-    loggedInUser: null,
-    isAdmin: false
-});
+export const UserContext = createContext({});
 
-export default function UserProvider({
-  children,
-}: {
+export default function UserProvider({ children }: {
   children: React.ReactNode;
 }) {
-  const [loggedInUser, setLoggedInUser] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState({
+    username: "",
+    accessToken: "",
+    admin: ""
+  });
 
   useEffect(() => {
-    const authListener = () => {
-      const unsub = auth.onAuthStateChanged((user: any) => {
-        if (user) {
-          user.getIdTokenResult().then((tokenResult: any) => {
-            user.admin = tokenResult.claims.admin;
-            setIsAdmin(user.admin ? true : false);
-          });
-          setLoggedInUser(user);
-        } else {
-            setIsAdmin(false)
-            setLoggedInUser(null)
-        }
-      });
-      return () => unsub();
-    };
-    return authListener();
-  }, []);
+    if (loggedInUser.username) {
+        window.sessionStorage.setItem("username", loggedInUser.username);
+        window.sessionStorage.setItem("admin", loggedInUser.admin !== "true" ? "false" : "true")
+    }
+  }, [loggedInUser.username]);
 
   return (
-    <UserContext.Provider value={{ loggedInUser, isAdmin }}>
+    <UserContext.Provider value={{ loggedInUser, setLoggedInUser }}>
       {children}
     </UserContext.Provider>
   );
