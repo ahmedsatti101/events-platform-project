@@ -1,16 +1,9 @@
 import { dbClient } from "../Aws";
 import { ConditionalCheckFailedException, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
-import DialogComponent from "./Dialog";
-import React, { useState, createElement } from "react";
 
 export default function EventSignUp(event_id: string) {
     const user = window.sessionStorage.getItem("username");
-    const [showDialog, setShowDialog] = useState(false);
-    const closeDialog = () => setShowDialog(false);
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const element = createElement(DialogComponent);
-    
+        
     const userIsAttending = async () => {
         if (!user) return;
 
