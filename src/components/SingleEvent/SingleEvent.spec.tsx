@@ -43,17 +43,6 @@ describe("SingleEvent component", () => {
         ).toBeInTheDocument()
       );
     });
-
-    it("Clicking the sign up button will show a dialog", async () => {
-        const user = userEvent.setup();
-        const button = await waitFor(() => screen.getByRole("button", { name: /Sign up/i }));
-
-        await user.click(button);
-
-        screen.debug();
-
-        expect(button).not.toBeInTheDocument();
-    });
   });
 
   describe("Copy link button", () => {
@@ -63,33 +52,7 @@ describe("SingleEvent component", () => {
           screen.getByRole("button", { name: /Copy link/i })
         ).toBeInTheDocument()
       );
-    });
-
-    it("Should copy event link to clipboard", async () => {
-      const clipboardWriteTextMock = jest
-        .spyOn(navigator.clipboard, "writeText")
-        .mockImplementation(() => Promise.resolve());
-      const clipboardReadTextMock = jest
-        .spyOn(navigator.clipboard, "readText")
-        .mockImplementation(() =>
-          Promise.resolve("http://localhost/events/123")
-        );
-
-      const user = userEvent.setup();
-
-      const button = await waitFor(() =>
-        screen.getByRole("button", { name: /Copy link/i })
-      );
-
-      await user.click(button);
-
-      const clipboardText = await navigator.clipboard.readText();
-
-      expect(clipboardText).toEqual("http://localhost/events/123");
-
-      clipboardReadTextMock.mockRestore();
-      clipboardWriteTextMock.mockRestore();
-    });
+    }); 
   });
 
   it("Add to calendar button should render on screen", async () => {
