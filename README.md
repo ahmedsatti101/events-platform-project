@@ -1,7 +1,7 @@
 # Events platform project
 
 ## About
-This project allows an imagined business create and share cycling events with the community. Members of the community are able to sign up to the platform by creating an account, browse available events and sign up for them. An event can also be added to your Google Calendar if you wish so. Business staff (admins) will be able to create events and assign other users as staff as well and these privileges are only availabe to staff.
+This project allows businesses to create and share cycling events with the community. Members of the community are able to sign up to the platform by creating an account, browse available events and sign up for them. An event can also be added to your Google Calendar if you wish so. Business staff (admins) will be able to create events and assign other users as staff as well and these privileges are only availabe to staff.
 
 ## Running locally
 
@@ -15,10 +15,52 @@ replace `repo-url` with the link you copied earlier and press `Enter`. Naviagte 
 ### Install dependencies
 Open the integrated terminal within the editor and run 
 
-`npm install` or `npm install --force`
+`npm install`
 
-to install all the dependencies and dev dependencies. 
+to install all the dependencies and dev dependencies.
 
+## Connect to Amazon Web Services (AWS)
+This project uses `AWS` as it's backend.
+
+So to run it locally you will need to:
+
+1. Create a AWS account, if you don't have one, by going to https://signin.aws.amazon.com/signup?request_type=register else skip to step 3,
+
+2. Follow the steps to create your account
+
+3. Click on `AWS Management Console` to navigate to your AWS console to create the necessary resources
+
+4. In the console, search for DynamoDB which is the database used for this project
+
+5. Click on `Create table`
+
+6. For table details, the table name must be `events` and `partition key` must be `eventId` with data type of `String`
+
+7. No additional configuration needed so click `Create table`
+
+8. It may take a while for the table to be created, so start with creating a user pool with Cognito
+
+9. From the left pane, select `User pools` and click on `Create user pool`
+
+10. For application type select `Single-page application (SPA)` then choose a name for the application. Under `Configure options > Options for sign-in identifiers` select `Email`
+
+11. Under `Required attributes for sign-up` select `email` then click `Create`.
+
+12. Once the user pool is created, go to `Authentication > Sign-up` in the `Attribute verification and user account confirmation` section, click `Edit` and enable the `Keep original attribute value active when an update is pending` option.
+
+13. You will need to allow users to sign in with their username (email) and password into your app. Under `Applications > App clients > your app > App client information` click Edit and under `Authentication flows` check the option `Sign in with username and password: ALLOW_USER_PASSWORD_AUTH` then save changes.
+
+13. Under `Custom attributes` click `Add custom attributes`. For the name type `admin` and make sure `mutable` is checked. Users with this attribute set to true have admin privligies that allow them to create events and assign other users as admins.
+
+14. Under `Branding > Message templates`, select `Verification message` click `Edit` and change the verification type to `Link`. Here you can customise your verification email subject and message that will be sent to users to confirm their accounts.
+
+12. Create a `.env` file in the root directory that includes your credentials and user pool ids for the app to work. Take a look at `.env.example` to see how you should do it.
+
+13. For the cognito client id, this can be found under `Applications > App clients > your app`. User pool ID can be found under `Overview` section of your user pool.
+
+14. You will need a access key and a secert access key to make API calls to AWS services. In the upper right corner, select your account name, `Security credentials`, under `Access keys` click `Create access key`.
+
+15. Copy the access key and secert access key into your `.env` file.
 
 ### Build and run the app
 Run 
@@ -36,89 +78,6 @@ Tests for the app can be run using
 
 ```npm run test```
 
-## Connect to Firebase
-This project uses `Firebase` as it's backend.
-
-So to run it locally you will need to:
-
-1. Create a firebase application by going to https://firebase.google.com/,
-
-2. Click on `Go to console` button top right
-
-3. Assuming this the first time you work with Firebase, select `Get started with a Firebase project` option
-
-4. Type a name for your project, and click `Continue`
-
-5. Select the option you prefer for Google Analytics, and click `Continue`
-
-6. Click `Create project`
-
-7. After project is created, click `Continue`. You will be directed your project homepage.
-
-8. Under `Get started by adding Firebase to your app` select the `Web` option (`</>` icon)
-
-9. Provide app nickname and click on `Register app`
-
-10. Firebase SDK was already installed when you installed the project dependencies above
-
-11. You need to copy the `firebaseConfig` object values on screen, without the quotes, into a `.env` file, which you need to create, in the root directory.
-
-```
-const firebaseConfig = {
-  apiKey: "xxxxxx", <-- copy what is inside the quotes
-  authDomain: "xxxxx",
-  projectId: "xxxxxx",
-  storageBucket: "xxxxxx",
-  messagingSenderId: "xxxx",
-  appId: "xxxxx",
-  measurementId: "xxxx"
-};
-```
-
-12. Take a look at `.env.example` to see how you should do it.
-
-13. Click `Continue to console` to finish and return to project homepage
-
-14. Click on `Build > Authentication` on the left side menu
-
-15. Click `Get started`
-
-16. Select `Email/Password`
-
-17. Enable `Email/Password` option, and click `Save`
-
-## Setup Firebase locally
-
-1. Install the Firebase CLI tools by running 
-
-`npm install -g firebase-tools`
-
-2. Login into firebase with `firebase login`
-
-3. For option `Usage and error reporting information` select the option you prefer, and click `Enter`
-
-4. Initialize firebase function with command
-
-`firebase init functions`
-
-5. Select `Use an existing project` and press `Enter`
-
-6. You should see the firebase project you created earlier, select it and press `Enter`
-
-7. For `What language` select `Typescript`
-
-8. To use `ESLint` press `Enter` to select (default `Yes`)
-
-9. Press `Enter` to start installing dependencies
-
-10. After installing the dependencies, copy the contents of `firebaseFunctionsIndex.txt` in the root directory to replace contents of `functions/src/index.ts`
-
-11. Deploy the function to firebase by running `firebase deploy --only functions`
-
-12. Firebase might ask you to go on the `Pay as you go` plan in order to complete the deployment.
-
-13. After deploying the function, the app is ready to use.
-
 ## Try the app
 The app is hosted on Netlify and you can go [here](https://cyclingevents.netlify.app/) to see it.
 
@@ -126,7 +85,7 @@ The app is hosted on Netlify and you can go [here](https://cyclingevents.netlify
 
 #### Add administrator
 
-1. Go to [Demo app](https://cyclingevents.netlify.app/) 
+1. Go to the [app](https://cyclingevents.netlify.app/) 
 
 2. On the app homepage click on `Sign Up` to create an account
 3. Enter an email and password
